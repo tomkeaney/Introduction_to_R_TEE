@@ -1,0 +1,510 @@
+---
+title: "Workshop 2: An introduction to coding in R"
+author: "Tom Keaney"
+format:
+  revealjs: 
+    theme: default
+    embed-resources: true # output doc contains all info needed to display html
+    code-annotations: hover
+    code-copy: false
+    code-block-height: 650px
+
+---
+
+## Recapping yesterday
+
+**The Holy trinity**:
+
+- select()
+- filter()
+- mutate()
+
+## Build your phenotypic classes
+
+- Not every individual has a recorded wing length. 
+
+- But there are other morphological traits in the dataset
+
+- Create a classification criteria and implement it
+
+```{r, echo=FALSE}
+library(tidyverse) # for tidy coding
+library(pander) # for nice tables
+library(patchwork) # for aligning plots
+library(MetBrewer) # for nice colours to use when making figures
+library(ggridges) # for nice density plots
+```
+
+
+```{r}
+pterosaur_data <- 
+  read_delim("pterosaur_data.csv", delim = ";") 
+
+p1 <-
+  pterosaur_data %>% 
+  ggplot(aes(x = SKULL)) +
+  geom_density(fill = "#2d2926", colour = "white") +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 220)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(y = "Density",
+       x = "Skull length (mm)") +
+  theme_classic() +
+  theme(text = element_text(size = 14))
+
+p2 <-
+  pterosaur_data %>% 
+  ggplot(aes(x = HUMERUS + RADIUS + METACARPAL_4 + 
+               WING_PHALANX_1 + WING_PHALANX_2 + 
+               WING_PHALANX_3 + WING_PHALANX_4)) +
+  geom_density(fill = "#2d2926", colour = "white") +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 810)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(y = "Density",
+       x = "Wing length (mm)") +
+  theme_classic() +
+  theme(text = element_text(size = 14))
+
+p3 <- 
+  pterosaur_data %>% 
+  ggplot(aes(x = FEMUR + TIBIA)) +
+  geom_density(fill = "#2d2926", colour = "white") +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 170)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(y = "Density",
+       x = "Leg length (mm)") +
+  theme_classic() +
+  theme(text = element_text(size = 14))
+
+p4 <-
+  pterosaur_data %>% 
+  ggplot(aes(x = TAIL)) +
+  geom_density(fill = "#2d2926", colour = "white") +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 470)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(y = "Density",
+       x = "Tail length (mm)") +
+  theme_classic() +
+  theme(text = element_text(size = 14))
+
+(p1 + p2) / (p3 + p4)
+```
+
+## Phenotypic classes
+
+```{r, echo=TRUE}
+pterosaur_data_classes <-
+  pterosaur_data %>% 
+  mutate(single_wing_length = 
+           HUMERUS + RADIUS + METACARPAL_4 + WING_PHALANX_1 + 
+           WING_PHALANX_2 + WING_PHALANX_3 + WING_PHALANX_4) %>% 
+  mutate(Size_class = case_when(single_wing_length < 300 ~ "Small", 
+                               single_wing_length >= 300 ~ "Large", 
+                               WING_PHALANX_1 < 80 ~ "Small",
+                               WING_PHALANX_1 >= 80 ~ "Large",
+                               FEMUR < 20 ~ "Small",
+                               FEMUR >= 20 ~ "Large",
+                               TAIL < 150 ~ "Small",
+                               TAIL >= 200 ~ "Large",
+                               SKULL < 80 ~ "Small",
+                               SKULL >= 100 ~ "Large",
+                               HUMERUS < 25 ~ "Small",
+                               HUMERUS >= 30 ~ "Large",
+                               SKULL < 90 ~ "Small",
+                               SKULL >= 90 ~ "Large",
+                               .default = "Unknown")) %>% 
+  select(Individual_ID, Size_class, single_wing_length, everything())
+```
+
+## Bonus content: summarise()
+
+- The logic of `mutate()` can be extended to `summarise()` row values
+- Rows can be grouped to summarise conditionally using the `group_by` function 
+
+::: {.fragment}
+
+```{r, echo=TRUE}
+#| output-location: fragment
+pterosaur_data_classes %>% 
+  group_by(Size_class) %>% 
+  summarise("Wing length" = mean(single_wing_length, na.rm = T)) #<1>
+```
+1. `mean()` has a built-in way to deal with NA values
+:::
+
+## Expanding our vocabulary
+
+- `pivot_longer()`
+
+- `slice_sample()`
+
+- `n()`
+
+## Your task
+
+1. Split pterosaurs into phenotypic classes and remove those you can't categorise 
+2. Trim the dataframe to only include the relevant measures
+3. Summarise the data to show the mean for your chosen morphological traits, for each class
+4. Convert to cm and round to zero decimal places 
+
+Focus on writing clear code, with comments (using the `#`) accompanying each important step.
+
+`Hint`: the `round()` function can be used inside `mutate()`
+
+## Table making
+
+Once complete, pass your polished dataframe to this function with the `%>%` to make a neat table
+
+```{r, echo=TRUE, eval=FALSE}
+# your dataframe goes here %>% 
+ pander(split.cell = 20, split.table = Inf) #<1>
+```
+1. See `?pander`
+
+## Joins
+
+What if we have two separate dataframes that we want to merge?
+
+```{r}
+#| echo: TRUE
+five_random_pterosaurs <- pterosaur_data_classes %>% 
+  filter_at(vars(ORBIT, TAIL), all_vars(!is.na(.)))  %>% 
+  slice_sample(n = 8)
+
+eye_stats <- 
+  five_random_pterosaurs %>%
+  slice_sample(n = 5) %>% 
+  select(Individual_ID, ORBIT) %>% 
+  arrange(Individual_ID)
+
+tail_stats <- 
+  five_random_pterosaurs %>%
+  slice_sample(n = 5) %>% 
+  select(Individual_ID, TAIL) %>% 
+  arrange(Individual_ID)
+```
+
+## Joins
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r, echo=TRUE}
+eye_stats
+```
+:::
+
+::: {.column width="50%"}
+
+```{r, echo=TRUE}
+tail_stats
+```
+
+:::
+
+::::
+
+For joins to work, there needs to be some common element that links the two dataframes
+
+## left_join()
+
+- Add columns from dataframe `y` to dataframe `x`
+- The comment element is the `Individual_ID`
+- Keep all observations in `x`
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: TRUE
+eye_stats %>% 
+  left_join(tail_stats)
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: TRUE
+tail_stats %>% 
+  left_join(eye_stats)
+```
+
+:::
+
+::::
+
+## inner_join()
+
+- Only keep rows in `x` that have a matching common element in `y`
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: TRUE
+eye_stats %>% 
+  inner_join(tail_stats)
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: TRUE
+tail_stats %>% 
+  inner_join(eye_stats)
+```
+
+:::
+
+::::
+
+## Visualising data
+
+- At its core, science communication is most effective through visual mediums
+
+- The `ggplot2` package is included in the tidyverse
+
+## ggplot()
+
+- Build plots one layer at a time
+
+- Layers are added on top of one another
+
+- New layers are added with the `+` symbol
+
+- `+` == `%>%` in ggplot-land
+
+::: {.fragment}
+**Getting started**
+
+```{r, echo=TRUE, eval=FALSE}
+pterosaur_data_classes %>% 
+  ggplot(aes())
+```
+- `ggplot()` provides an empty canvas
+- `aes` determines how variables are mapped to visual aesthetics
+:::
+
+## Building a geom_histogram()
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| fig-height: 4
+pterosaur_data_classes %>% 
+  ggplot(aes(x = SKULL/10, fill = Size_class)) +
+  geom_histogram(binwidth = 0.1) 
+```
+
+## Fix the labels
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| fig-height: 4
+pterosaur_data_classes %>% 
+  ggplot(aes(x = SKULL/10, fill = Size_class)) +
+  geom_histogram(binwidth = 0.1) +
+  labs(x = "Skull length (cm)", y = "No. individuals", fill = "Size class")
+```
+
+## Fix the theming
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| fig-height: 4
+pterosaur_data_classes %>% 
+  ggplot(aes(x = SKULL/10, fill = Size_class)) +
+  geom_histogram(binwidth = 0.1) +
+  labs(x = "Skull length (cm)", y = "No. individuals", fill = "Size class") +
+  theme_classic() + # new
+  theme(panel.grid.major = element_line(), # new
+        text = element_text(size= 14)) # new
+  
+```
+
+## Fix the axis
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| fig-height: 2.5
+pterosaur_data_classes %>% 
+  ggplot(aes(x = SKULL/10, fill = Size_class)) +
+  geom_histogram(binwidth = 0.1) +
+  labs(x = "Skull length (cm)", y = "No. individuals", fill = "Size class") +
+  scale_x_continuous(expand = c(0, 0), # new
+                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0), # new
+                     limits = c(0, 20.0)) + # new
+  scale_y_continuous(expand = c(0, 0)) + # new
+  theme_classic() + 
+  theme(panel.grid.major = element_line(),
+        text = element_text(size= 14))
+```
+
+## Change the colours
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| fig-height: 2.5
+pterosaur_data_classes %>% 
+  ggplot(aes(x = SKULL/10, fill = Size_class)) +
+  geom_histogram(binwidth = 0.1) +
+  labs(x = "Skull length (cm)", y = "No. individuals", fill = "Size class") +
+  scale_x_continuous(expand = c(0, 0),
+                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),
+                     limits = c(0, 20.0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_fill_manual(values = c(met.brewer("Monet")[2], met.brewer("Monet")[8])) + # new
+  theme_classic() +
+  theme(panel.grid.major = element_line(),
+        text = element_text(size= 14))
+```
+
+## Change to geom_density()
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| fig-height: 2.5
+pterosaur_data_classes %>% 
+  ggplot(aes(x = SKULL/10, fill = Size_class)) + 
+  geom_density(colour = NA, alpha = 0.7) + # new
+  labs(x = "Skull length (cm)", y = "No. individuals", fill = "Size class") +
+  scale_fill_manual(values = c(met.brewer("Monet")[2], met.brewer("Monet")[8])) +
+  scale_x_continuous(expand = c(0, 0),
+                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),
+                     limits = c(0, 20.0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme_classic() +
+  theme(panel.grid.major = element_line(),
+        text = element_text(size= 14))
+```
+
+## Joyplots
+
+```{r, echo=TRUE}
+#| output-location: slide
+
+# use pivot_longer to get all traits into single column
+
+pterosaur_data_classes %>% 
+  select(!c(single_wing_length)) %>% 
+  pivot_longer(cols = ORBIT:TIBIA, 
+               names_to = "Trait",
+               values_to = "Length") %>%
+  group_by(Trait) %>% 
+  mutate(Mean_value = mean(Length, na.rm = T)) %>% 
+  ungroup() %>% 
+  
+  # plot
+  ggplot(aes(x = Length, y = fct_reorder(Trait, Mean_value))) +
+  geom_density_ridges(alpha = 0.5, scale = 3, linewidth = 0,
+                      fill = "#05595B", color = NA) +
+  scale_x_continuous(limits = c(0, NA), expand = c(0, 0)) +
+  labs(y = "Trait", x = "Length (mm)") +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        panel.grid.major.y = element_line(size = 0.5))
+```
+
+
+## The scatterplot: geom_point()
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| fig-height: 4
+pterosaur_data_classes %>%
+  ggplot(aes(x = ORBIT, y = WING_PHALANX_1)) +
+  geom_point()
+```
+
+## Make improvements
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| fig-height: 2.5
+pterosaur_data_classes %>%
+  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +
+  geom_point() +
+  labs(x = "Orbit length (cm)", y = "First wing phalanx\nlength (cm)") +
+  scale_fill_manual(values = c(met.brewer("Monet")[2], met.brewer("Monet")[8])) +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +
+  theme_classic() +
+  theme(panel.grid.major = element_line(),
+        text = element_text(size= 14))
+```
+
+## geom_point()
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| fig-height: 2.5
+pterosaur_data_classes %>% filter(Size_class != "Unknown") %>% 
+  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +
+  geom_point(aes(fill = Size_class), shape = 21, size = 5, alpha = 0.8, 
+             colour = "black") +
+  labs(x = "Orbit length (cm)", y = "First wing phalanx\nlength (cm)", 
+       fill = "Size class") +
+  scale_fill_manual(values = c(met.brewer("Hiroshige")[4], 
+                               met.brewer("Hiroshige")[6])) +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +
+  theme_classic() +
+  theme(panel.grid.major = element_line(),
+        text = element_text(size= 14))
+```
+
+## Continuous vs discrete colours
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| fig-height: 2.5
+pterosaur_data_classes %>% filter(Size_class != "Unknown") %>% 
+  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +
+  geom_point(aes(fill = ORBIT/10), shape = 21, size = 5, alpha = 0.9, 
+             colour = "black") +
+  labs(x = "Orbit length (cm)", y = "First wing phalanx\nlength (cm)", 
+       fill = "Orbit\nlength") +
+  scale_fill_gradientn(colors=met.brewer("Hiroshige", direction = -1)) +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +
+  theme_classic() +
+  theme(panel.grid.major = element_line(),
+        text = element_text(size= 14))
+```
+
+## General tips
+
+- `alpha`: changes the transparency
+
+- `fill`: colours the inside of elements
+
+- `colour`: colours the outlines of elements
+
+If you want these to change with your data, place them inside `aes()`
+
+Many more plot styles can be found [here](https://r-graph-gallery.com/)
+
+## Building a hypothesis
+
+With all of the skills you now possess, outline your hypothesis for why there are discrete size classes in the _Rhamphorhynchus_ dataset. Write the report up in quarto, making sure to use visual summaries of the data to support your hypothesis. 
+
+Make sure to:
+
+- Tidy your code
+
+- Use comments within code chunks
+
+- Write explanations outside of code chunks
+
+- See the `_quarto.yml` file
+
+- [Quarto html](https://quarto.org/docs/output-formats/html-basics.html) editing
+
+## The power of Quarto
+
+[Tom's supplementary material](https://tomkeaney.github.io/Secondary_theorem_separate_sexes/About.html){preview-link="true"}
+

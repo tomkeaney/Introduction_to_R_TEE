@@ -1,0 +1,2109 @@
+[
+  {
+    "objectID": "R_lecture_1.html#goals",
+    "href": "R_lecture_1.html#goals",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Goals",
+    "text": "Goals\n\nSetup R to work as you intend\nCode in a reproducible, clear style\nGain a familiarity with key data wrangling functions\nBecome well versed in creating figures with ggplot\nCreate a document that should help you in the future"
+  },
+  {
+    "objectID": "R_lecture_1.html#installation",
+    "href": "R_lecture_1.html#installation",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Installation",
+    "text": "Installation\nWe will run R using quarto documents in R studio\nDownload the latest versions:\n\nR: https://cran.r-project.org/\nR studio: https://posit.co/downloads/\n\nQuarto: turns R into a text editor\n\nCode is written in specified code chunks\nNotes can be written outside code chunks without #\nYour code can be turned into an elegant report"
+  },
+  {
+    "objectID": "R_lecture_1.html#setting-up",
+    "href": "R_lecture_1.html#setting-up",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Setting up",
+    "text": "Setting up\nMake your interface look nice:\n\nTools &gt; global options\nLight or dark modes\nFira code: https://github.com/tonsky/FiraCode/wiki/RStudio-instructions"
+  },
+  {
+    "objectID": "R_lecture_1.html#projects",
+    "href": "R_lecture_1.html#projects",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Projects",
+    "text": "Projects\nFile &gt; New project\n\nExisting directory: places project in an existing folder\nNew directory: creates new folder\nVersion control: handy if you want to use github\n\nProjects are powerful:\n\nR knows where to look for files\nNo need to worry about setting working directories\nGreat for sharing"
+  },
+  {
+    "objectID": "R_lecture_1.html#quarto",
+    "href": "R_lecture_1.html#quarto",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Quarto",
+    "text": "Quarto\n\nOpen a quarto document in your new project\nFile &gt; New File &gt; Quarto document\nSave the document within the project directory (where you already are)\nSave the _quarto.yml provided in the email within this directory\nRender the document"
+  },
+  {
+    "objectID": "R_lecture_1.html#packages",
+    "href": "R_lecture_1.html#packages",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Packages",
+    "text": "Packages\nThe base version of R can be upgraded with packages\nWe shall use the tidyverse collection of packages.\n\n#install.packages(\"tidyverse\")\n#install.packages(\"pander\")\n#install.packages(\"patchwork\")\n#install.packages(\"MetBrewer\")\n\nlibrary(tidyverse) # for tidy coding\nlibrary(pander) # for nice tables\nlibrary(patchwork) # for aligning plots\nlibrary(MetBrewer) # for nice colours to use when making figures"
+  },
+  {
+    "objectID": "R_lecture_1.html#the-tidyverse",
+    "href": "R_lecture_1.html#the-tidyverse",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "The tidyverse",
+    "text": "The tidyverse\n\n\n\n\n\nA collection of packages\nAll follow the same logic\nQuite different from base R\n“Supremely readable”"
+  },
+  {
+    "objectID": "R_lecture_1.html#rhamphorhynchus-muensteri",
+    "href": "R_lecture_1.html#rhamphorhynchus-muensteri",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Rhamphorhynchus muensteri",
+    "text": "Rhamphorhynchus muensteri\n\n\n\n\n\nA Bavarian pterosaur from the Jurassic\n140 different individuals have been found\nData from Habib and Hone 2024 PeerJ"
+  },
+  {
+    "objectID": "R_lecture_1.html#the-dataset",
+    "href": "R_lecture_1.html#the-dataset",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "The dataset",
+    "text": "The dataset\n\n1pterosaur_data &lt;-\n2  read_delim(\"pterosaur_data.csv\", delim = \";\")\n\n3pterosaur_data\n\n\n1\n\nAssign a name to the dataset\n\n2\n\nLoad the csv file and specify the separator between columns\n\n3\n\nDisplay the dataset\n\n\n\n\n\n\n# A tibble: 138 × 15\n   Individual_ID ORBIT SKULL  NECK TRUNK_LENGTH  TAIL HUMERUS RADIUS\n           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;\n 1             1  11      40  21.5         47.5  106.    16.5   26.7\n 2             2  10      35  18           NA    112     15.3   26  \n 3             3  NA      NA  NA           36     85     NA     NA  \n 4             4  NA      36  NA           39    115     17     28  \n 5             5  NA      NA  15.5         36.5  100     14.6   23.8\n 6             6  12      35  23           40    110     NA     NA  \n 7             7  10      35  20           41    106     15.5   24  \n 8             8  NA      31  NA           NA     NA     14.5   24  \n 9             9  NA      NA  17           36     79     NA     NA  \n10            10  12.5    41  23           47    125     19     32  \n# ℹ 128 more rows\n# ℹ 7 more variables: METACARPAL_4 &lt;dbl&gt;, WING_PHALANX_1 &lt;dbl&gt;,\n#   WING_PHALANX_2 &lt;dbl&gt;, WING_PHALANX_3 &lt;dbl&gt;, WING_PHALANX_4 &lt;dbl&gt;,\n#   FEMUR &lt;dbl&gt;, TIBIA &lt;dbl&gt;"
+  },
+  {
+    "objectID": "R_lecture_1.html#some-intriguing-patterns",
+    "href": "R_lecture_1.html#some-intriguing-patterns",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Some intriguing patterns",
+    "text": "Some intriguing patterns"
+  },
+  {
+    "objectID": "R_lecture_1.html#the-key-to-tidyverse-coding",
+    "href": "R_lecture_1.html#the-key-to-tidyverse-coding",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "The key to tidyverse coding: %>%",
+    "text": "The key to tidyverse coding: %&gt;%\nThis weird symbol is called a pipe\n\nYou should read this as then\ndo this, then do this…\nallows you to chain your code\n\n\n\npterosaur_data %&gt;% view()\n\nIn english this means: load the pterosaur data then view it in a new tab"
+  },
+  {
+    "objectID": "R_lecture_1.html#the-holy-trinity",
+    "href": "R_lecture_1.html#the-holy-trinity",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "The holy trinity",
+    "text": "The holy trinity\n\nselect(): order, rename or drop columns\nfilter(): keep or remove specific rows\nmutate(): create new columns or edit existing ones\n\nIf you ever need help with a function, ? is your friend\n\n\n# An example of how to get some help\n?select"
+  },
+  {
+    "objectID": "R_lecture_1.html#select",
+    "href": "R_lecture_1.html#select",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "select()",
+    "text": "select()\nRemoving columns you aren’t interested in:\n\npterosaur_data %&gt;% select(Individual_ID, TAIL)\n\n1pterosaur_data %&gt;% select(!c(Individual_ID, TAIL))\n\n2pterosaur_data %&gt;% select(contains(\"WING\"))\n\n3pterosaur_data %&gt;% select(1, 5)\n\n\n1\n\nthe ! reverses the statement\n\n2\n\ncontains chooses columns with names that contain a pattern\n\n3\n\nDangerous coding! Avoid.\n\n\n\n\n\nChanging column names:\n\npterosaur_data %&gt;% select(Specimen = Individual_ID)\n\n# if you want to keep all other columns\n\npterosaur_data %&gt;% select(Specimen = Individual_ID, everything())\n\n# a recommended alternative\n\npterosaur_data %&gt;% rename(Specimen = Individual_ID)"
+  },
+  {
+    "objectID": "R_lecture_1.html#select-use-cases",
+    "href": "R_lecture_1.html#select-use-cases",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "select() use cases",
+    "text": "select() use cases\n\nCreate a new dataset that only contains the ID of the individual and wing measurements for phalanxs 2, 3 and 4.\n\n\n\npterosaur_subset &lt;-\n  pterosaur_data %&gt;% \n  select(Individual_ID, num_range(\"WING_PHALANX_\", 2:4)) \n\n\n\nReturning to the original data, remove the measurements for wing phalanx 2 and 4\n\n\n\npterosaur_subset_2 &lt;-\n  pterosaur_data %&gt;% \n  select(!c(WING_PHALANX_2, WING_PHALANX_4)) \n\n\n\nWhy does this cause an error?\n\n\npterosaur_data %&gt;% select(contains(WING))"
+  },
+  {
+    "objectID": "R_lecture_1.html#filter",
+    "href": "R_lecture_1.html#filter",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "filter()",
+    "text": "filter()\nChoosing rows of interest\n\nLarge_data &lt;- pterosaur_data %&gt;% filter(TAIL &gt; 200)\n\n1ten_cm_tails &lt;- pterosaur_data %&gt;% filter(TAIL == 100)\n\nlong_tails_and_small_heads &lt;- \n  pterosaur_data %&gt;% filter(TAIL &gt; 200 & SKULL &lt; 90)\n\nlong_tails_or_small_heads &lt;- \n2  pterosaur_data %&gt;% filter(TAIL &gt; 200 | SKULL &lt; 90)\n\n\n1\n\n== is needed to filter\n\n2\n\n| indicates or\n\n\n\n\n\nDealing with NA values\n\n# remove NAs in single column\npterosaur_data %&gt;% filter(!is.na(ORBIT))\n\n# remove all rows with NAs\npterosaur_data %&gt;% filter_at(vars(2:15), all_vars(!is.na(.)))"
+  },
+  {
+    "objectID": "R_lecture_1.html#filter-use-cases",
+    "href": "R_lecture_1.html#filter-use-cases",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind pterosaurs that have longer necks than humerus’\n\n\n\nnecks_longer_than_forearms &lt;- pterosaur_data %&gt;% filter(NECK &gt; HUMERUS) \n\n\n\nReturning to the original data, remove measurements with NA TRUNK_LENGTH values, for individuals with IDs greater than 50\n\n\n\npterosaur_data %&gt;% \n  filter(!is.na(TRUNK_LENGTH) & Individual_ID &gt; 50) \n\n\n\nTrim the data to only include SKULL lengths between 60 and 90mm\n\n\n\nmedium_skulls &lt;- pterosaur_data %&gt;% filter(SKULL &lt;= 90 & SKULL &gt;= 60)"
+  },
+  {
+    "objectID": "R_lecture_1.html#filter-use-cases-1",
+    "href": "R_lecture_1.html#filter-use-cases-1",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind the individuals with the maximum and minimum tail lengths\n\n\n\npterosaur_data %&gt;%\n  filter(!is.na(TAIL)) %&gt;% \n  filter(TAIL == max(TAIL) |\n           TAIL == min(TAIL)) \n\n\n\nFind the individuals with tail lengths above the mean of the sampled population\n\n\n\npterosaur_data %&gt;% \n  filter(!is.na(TAIL)) %&gt;% \n  filter(TAIL &gt; mean(TAIL))"
+  },
+  {
+    "objectID": "R_lecture_1.html#mutate-modifying-existing-columns",
+    "href": "R_lecture_1.html#mutate-modifying-existing-columns",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "mutate(): modifying existing columns",
+    "text": "mutate(): modifying existing columns\nLet’s change the units of measurement to centimetres\n\npterosaur_data_cm &lt;- pterosaur_data %&gt;% mutate(ORBIT = ORBIT/10)\n\n\nNow add 10cm to each orbit measurement (but don’t save this!)\n\npterosaur_data_cm &lt;- pterosaur_data %&gt;% mutate(ORBIT = ORBIT + 10)"
+  },
+  {
+    "objectID": "R_lecture_1.html#mutate-creating-new-columns",
+    "href": "R_lecture_1.html#mutate-creating-new-columns",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "mutate(): creating new columns",
+    "text": "mutate(): creating new columns\nThe total length of a wing is roughly the sum of the lengths of the humerus, radius, fourth metacarpal and the four wing phalanxs. With mutate(), we can calculate this and add it to the dataset:\n\n\npterosaur_data &lt;-\n  pterosaur_data %&gt;% \n  mutate(single_wing_length = \n           HUMERUS + RADIUS + METACARPAL_4 + WING_PHALANX_1 + \n           WING_PHALANX_2 + WING_PHALANX_3 + WING_PHALANX_4) %&gt;% \n  select(Individual_ID, single_wing_length, everything())"
+  },
+  {
+    "objectID": "R_lecture_1.html#conditional-mutation",
+    "href": "R_lecture_1.html#conditional-mutation",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\nCan we place individuals into phenotypic classes?"
+  },
+  {
+    "objectID": "R_lecture_1.html#conditional-mutation-1",
+    "href": "R_lecture_1.html#conditional-mutation-1",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\npterosaur_data_age_structured &lt;-\n  pterosaur_data %&gt;% \n  mutate(Phenotypic_class = case_when(\n1    single_wing_length &lt; 300 ~ \"Small\",\n2    single_wing_length &gt;= 300 ~ \"Large\",\n3    .default = \"Unknown\"))\n\npterosaur_data_age_structured %&gt;% \n  select(Individual_ID, Phenotypic_class, single_wing_length)\n\n\n1\n\nFor this subset of cases…\n\n2\n\nFor a second subset of cases…\n\n3\n\nFor all remaining cases…\n\n\n\n\n\n\n# A tibble: 138 × 3\n   Individual_ID Phenotypic_class single_wing_length\n           &lt;dbl&gt; &lt;chr&gt;                         &lt;dbl&gt;\n 1             1 Small                          183.\n 2             2 Small                          174.\n 3             3 Unknown                         NA \n 4             4 Small                          189.\n 5             5 Small                          166.\n 6             6 Unknown                         NA \n 7             7 Small                          164.\n 8             8 Unknown                         NA \n 9             9 Unknown                         NA \n10            10 Small                          221 \n# ℹ 128 more rows"
+  },
+  {
+    "objectID": "R_lecture_1.html#conditional-mutation-2",
+    "href": "R_lecture_1.html#conditional-mutation-2",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\nIt’s also possible to mutate a single row\n\npterosaur_data %&gt;% \n  mutate(Sex = case_when(Individual_ID == 1 ~ \"Special\",\n                         .default = \"Ordinary\"))"
+  },
+  {
+    "objectID": "R_lecture_1.html#build-your-phenotypic-classes",
+    "href": "R_lecture_1.html#build-your-phenotypic-classes",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Build your phenotypic classes",
+    "text": "Build your phenotypic classes\n\nNot every individual has a recorded wing length.\nBut there are other morphological traits in the dataset\nCreate a classification criteria and implement it"
+  },
+  {
+    "objectID": "R_lecture_1.html#phenotypic-classes",
+    "href": "R_lecture_1.html#phenotypic-classes",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Phenotypic classes",
+    "text": "Phenotypic classes\n\npterosaur_data_age_structured &lt;-\n  pterosaur_data %&gt;% \n  mutate(Phenotypic_class = case_when(single_wing_length &lt; 300 ~ \"Small\", \n                               single_wing_length &gt;= 300 ~ \"Large\", \n                               WING_PHALANX_1 &lt; 80 ~ \"Small\",\n                               WING_PHALANX_1 &gt;= 80 ~ \"Large\",\n                               FEMUR &lt; 20 ~ \"Small\",\n                               FEMUR &gt;= 20 ~ \"Large\",\n                               TAIL &lt; 150 ~ \"Small\",\n                               TAIL &gt;= 200 ~ \"Large\",\n                               SKULL &lt; 80 ~ \"Small\",\n                               SKULL &gt;= 100 ~ \"Large\",\n                               HUMERUS &lt; 25 ~ \"Small\",\n                               HUMERUS &gt;= 30 ~ \"Large\",\n                               SKULL &lt; 90 ~ \"Small\",\n                               SKULL &gt;= 90 ~ \"Large\",\n                               .default = \"Unknown\")) %&gt;% \n  select(Individual_ID, Phenotypic_class, everything())"
+  },
+  {
+    "objectID": "R_lecture_1.html#bonus-content-summarise",
+    "href": "R_lecture_1.html#bonus-content-summarise",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Bonus content: summarise()",
+    "text": "Bonus content: summarise()\n\nThe logic of mutate() can be extended to summarise() row values\nRows can be grouped to summarise conditionally using the group_by function\n\n\n\npterosaur_data_age_structured %&gt;% \n  group_by(Phenotypic_class) %&gt;% \n1  summarise(\"Wing length\" = mean(single_wing_length, na.rm = T))\n\n\n1\n\nmean() has a built-in way to deal with NA values\n\n\n\n\n\n\n# A tibble: 3 × 2\n  Phenotypic_class `Wing length`\n  &lt;chr&gt;                    &lt;dbl&gt;\n1 Large                     490.\n2 Small                     197.\n3 Unknown                   NaN"
+  },
+  {
+    "objectID": "R_lecture_1.html#your-task",
+    "href": "R_lecture_1.html#your-task",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Your task",
+    "text": "Your task\n\nSplit pterosaurs into phenotypic classes and remove those you can’t categorise\nTrim the dataframe to only include class, skull, length, wing length and tail length\nSummarise the data to show the mean for morphological traits, for each class\nConvert to cm and round to zero decimal places\n\nFocus on writing clear code, with comments (using the #) accompanying each important step.\nHint: the round() function can be used inside mutate()"
+  },
+  {
+    "objectID": "R_lecture_1.html#table-making",
+    "href": "R_lecture_1.html#table-making",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Table making",
+    "text": "Table making\nOnce complete, pass your polished dataframe to this function with the %&gt;% to make a neat table\n\n# your dataframe goes here %&gt;% \n1 pander(split.cell = 20, split.table = Inf)\n\n\n1\n\nSee ?pander"
+  },
+  {
+    "objectID": "R_lecture_1.html#expanding-our-vocabulary",
+    "href": "R_lecture_1.html#expanding-our-vocabulary",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Expanding our vocabulary",
+    "text": "Expanding our vocabulary\n\ndistinct()\nslice()\nn()\nbind_rows()"
+  },
+  {
+    "objectID": "R_lecture_1.html#joins",
+    "href": "R_lecture_1.html#joins",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\nWhat if we have two separate dataframes that we want to merge?\n\nfive_random_pterosaurs &lt;- pterosaur_data %&gt;% \n  filter_at(vars(2:15), all_vars(!is.na(.)))  %&gt;% \n  slice_sample(n = 8)\n\neye_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, ORBIT) %&gt;% \n  arrange(Individual_ID)\n\ntail_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, TAIL) %&gt;% \n  arrange(Individual_ID)"
+  },
+  {
+    "objectID": "R_lecture_1.html#joins-1",
+    "href": "R_lecture_1.html#joins-1",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\n\n\n\neye_stats\n\n# A tibble: 5 × 2\n  Individual_ID ORBIT\n          &lt;dbl&gt; &lt;dbl&gt;\n1             1  11  \n2            29  13  \n3            54  20  \n4            76  26.5\n5            77  27  \n\n\n\n\ntail_stats\n\n# A tibble: 5 × 2\n  Individual_ID  TAIL\n          &lt;dbl&gt; &lt;dbl&gt;\n1             1  106.\n2            10  125 \n3            29  148 \n4            54  254 \n5            76  343 \n\n\n\nFor joins to work, there needs to be some common element that links the two dataframes"
+  },
+  {
+    "objectID": "R_lecture_1.html#left_join",
+    "href": "R_lecture_1.html#left_join",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "left_join()",
+    "text": "left_join()\n\nAdd columns from dataframe y to dataframe x\nThe comment element is the Individual_ID\nKeep all observations in x\n\n\n\n\neye_stats %&gt;% \n  left_join(tail_stats)\n\n# A tibble: 5 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             1  11    106.\n2            29  13    148 \n3            54  20    254 \n4            76  26.5  343 \n5            77  27     NA \n\n\n\n\ntail_stats %&gt;% \n  left_join(eye_stats)\n\n# A tibble: 5 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             1  106.  11  \n2            10  125   NA  \n3            29  148   13  \n4            54  254   20  \n5            76  343   26.5"
+  },
+  {
+    "objectID": "R_lecture_1.html#inner_join",
+    "href": "R_lecture_1.html#inner_join",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "inner_join()",
+    "text": "inner_join()\n\nOnly keep rows in x that have a matching common element in y\n\n\n\n\neye_stats %&gt;% \n  inner_join(tail_stats)\n\n# A tibble: 4 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             1  11    106.\n2            29  13    148 \n3            54  20    254 \n4            76  26.5  343 \n\n\n\n\ntail_stats %&gt;% \n  inner_join(eye_stats)\n\n# A tibble: 4 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             1  106.  11  \n2            29  148   13  \n3            54  254   20  \n4            76  343   26.5"
+  },
+  {
+    "objectID": "R_lecture_1.html#build-a-quarto-report",
+    "href": "R_lecture_1.html#build-a-quarto-report",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Build a quarto report",
+    "text": "Build a quarto report\n\nUse quarto to publish a report, documenting your code\nUse this time to tidy your code\nUse comments within code chunks\nWrite explanations outside of code chunks\nSee the _quarto.yml file"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#goals",
+    "href": "R_lecture_1_student.html#goals",
+    "title": "An introduction to coding in R",
+    "section": "Goals",
+    "text": "Goals\n\nSetup R to work as you intend\nCode in a reproducible, clear style\nGain a familiarity with key data wrangling functions\nBecome well versed in creating figures with ggplot\nCreate a document that should help you in the future"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#installation",
+    "href": "R_lecture_1_student.html#installation",
+    "title": "An introduction to coding in R",
+    "section": "Installation",
+    "text": "Installation\nWe will run R using quarto documents in R studio\nDownload the latest versions:\n\nR: https://cran.r-project.org/\nR studio: https://posit.co/downloads/\n\nQuarto: turns R into a text editor\n\nCode is written in specified code chunks\nNotes can be written outside code chunks without #\nYour code can be turned into an elegant report"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#setting-up",
+    "href": "R_lecture_1_student.html#setting-up",
+    "title": "An introduction to coding in R",
+    "section": "Setting up",
+    "text": "Setting up\nMake your interface look nice:\n\nTools &gt; global options\nLight or dark modes\nFira code: https://github.com/tonsky/FiraCode/wiki/RStudio-instructions"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#projects",
+    "href": "R_lecture_1_student.html#projects",
+    "title": "An introduction to coding in R",
+    "section": "Projects",
+    "text": "Projects\nFile &gt; New project\n\nExisting directory: places project in an existing folder\nNew directory: creates new folder\nVersion control: handy if you want to use github\n\nProjects are powerful:\n\nR knows where to look for files\nNo need to worry about setting working directories\nGreat for sharing"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#quarto",
+    "href": "R_lecture_1_student.html#quarto",
+    "title": "An introduction to coding in R",
+    "section": "Quarto",
+    "text": "Quarto\n\nOpen a quarto document in your new project\nFile &gt; New File &gt; Quarto document\nSave the document within the project directory (where you already are)\nSave the _quarto.yml provided in the email within this directory\nRender the document"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#packages",
+    "href": "R_lecture_1_student.html#packages",
+    "title": "An introduction to coding in R",
+    "section": "Packages",
+    "text": "Packages\nThe base version of R can be upgraded with packages\nWe shall use the tidyverse collection of packages.\n\n#install.packages(\"tidyverse\")\n#install.packages(\"pander\")\n#install.packages(\"patchwork\")\n#install.packages(\"MetBrewer\")\n\nlibrary(tidyverse) # for tidy coding\nlibrary(pander) # for nice tables\nlibrary(patchwork) # for aligning plots\nlibrary(MetBrewer) # for nice colours to use when making figures"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#the-tidyverse",
+    "href": "R_lecture_1_student.html#the-tidyverse",
+    "title": "An introduction to coding in R",
+    "section": "The tidyverse",
+    "text": "The tidyverse\n\n\n\n\n\nA collection of packages\nAll follow the same logic\nQuite different from base R\n“Supremely readable”"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#rhamphorhynchus-muensteri",
+    "href": "R_lecture_1_student.html#rhamphorhynchus-muensteri",
+    "title": "An introduction to coding in R",
+    "section": "Rhamphorhynchus muensteri",
+    "text": "Rhamphorhynchus muensteri\n\n\n\n\n\nA Bavarian pterosaur from the Jurassic\n140 different individuals have been found\nData from Habib and Hone 2024 PeerJ"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#the-dataset",
+    "href": "R_lecture_1_student.html#the-dataset",
+    "title": "An introduction to coding in R",
+    "section": "The dataset",
+    "text": "The dataset\n\n1pterosaur_data &lt;-\n2  read_delim(\"pterosaur_data.csv\", delim = \";\")\n\n3pterosaur_data\n\n\n1\n\nAssign a name to the dataset\n\n2\n\nLoad the csv file and specify the separator between columns\n\n3\n\nDisplay the dataset\n\n\n\n\n\n\n# A tibble: 138 × 15\n   Individual_ID ORBIT SKULL  NECK TRUNK_LENGTH  TAIL HUMERUS RADIUS\n           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;\n 1             1  11      40  21.5         47.5  106.    16.5   26.7\n 2             2  10      35  18           NA    112     15.3   26  \n 3             3  NA      NA  NA           36     85     NA     NA  \n 4             4  NA      36  NA           39    115     17     28  \n 5             5  NA      NA  15.5         36.5  100     14.6   23.8\n 6             6  12      35  23           40    110     NA     NA  \n 7             7  10      35  20           41    106     15.5   24  \n 8             8  NA      31  NA           NA     NA     14.5   24  \n 9             9  NA      NA  17           36     79     NA     NA  \n10            10  12.5    41  23           47    125     19     32  \n# ℹ 128 more rows\n# ℹ 7 more variables: METACARPAL_4 &lt;dbl&gt;, WING_PHALANX_1 &lt;dbl&gt;,\n#   WING_PHALANX_2 &lt;dbl&gt;, WING_PHALANX_3 &lt;dbl&gt;, WING_PHALANX_4 &lt;dbl&gt;,\n#   FEMUR &lt;dbl&gt;, TIBIA &lt;dbl&gt;"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#some-intriguing-patterns",
+    "href": "R_lecture_1_student.html#some-intriguing-patterns",
+    "title": "An introduction to coding in R",
+    "section": "Some intriguing patterns",
+    "text": "Some intriguing patterns"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#the-key-to-tidyverse-coding",
+    "href": "R_lecture_1_student.html#the-key-to-tidyverse-coding",
+    "title": "An introduction to coding in R",
+    "section": "The key to tidyverse coding: %>%",
+    "text": "The key to tidyverse coding: %&gt;%\nThis weird symbol is called a pipe\n\nYou should read this as then\ndo this, then do this…\nallows you to chain your code\n\n\n\npterosaur_data %&gt;% view()\n\nIn english this means: load the pterosaur data then view it in a new tab"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#the-holy-trinity",
+    "href": "R_lecture_1_student.html#the-holy-trinity",
+    "title": "An introduction to coding in R",
+    "section": "The holy trinity",
+    "text": "The holy trinity\n\nselect(): order, rename or drop columns\nfilter(): keep or remove specific rows\nmutate(): create new columns or edit existing ones\n\nIf you ever need help with a function, ? is your friend\n\n\n# An example of how to get some help\n?select"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#select",
+    "href": "R_lecture_1_student.html#select",
+    "title": "An introduction to coding in R",
+    "section": "select()",
+    "text": "select()\nRemoving columns you aren’t interested in:\n\npterosaur_data %&gt;% select(Individual_ID, TAIL)\n\n1pterosaur_data %&gt;% select(!c(Individual_ID, TAIL))\n\n2pterosaur_data %&gt;% select(contains(\"WING\"))\n\n3pterosaur_data %&gt;% select(1, 5)\n\n\n1\n\nthe ! reverses the statement\n\n2\n\ncontains chooses columns with names that contain a pattern\n\n3\n\nDangerous coding! Avoid.\n\n\n\n\n\nChanging column names:\n\npterosaur_data %&gt;% select(Specimen = Individual_ID)\n\n# if you want to keep all other columns\n\npterosaur_data %&gt;% select(Specimen = Individual_ID, everything())\n\n# a recommended alternative\n\npterosaur_data %&gt;% rename(Specimen = Individual_ID)"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#select-use-cases",
+    "href": "R_lecture_1_student.html#select-use-cases",
+    "title": "An introduction to coding in R",
+    "section": "select() use cases",
+    "text": "select() use cases\n\nCreate a new dataset that only contains the ID of the individual and wing measurements for phalanxs 2, 3 and 4.\n\n\n\n\n\nReturning to the original data, remove the measurements for wing phalanx 2 and 4\n\n\n\n\n\nWhy does this cause an error?\n\n\npterosaur_data %&gt;% select(contains(WING))"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#filter",
+    "href": "R_lecture_1_student.html#filter",
+    "title": "An introduction to coding in R",
+    "section": "filter()",
+    "text": "filter()\nChoosing rows of interest\n\nLarge_data &lt;- pterosaur_data %&gt;% filter(TAIL &gt; 200)\n\n1ten_cm_tails &lt;- pterosaur_data %&gt;% filter(TAIL == 100)\n\nlong_tails_and_small_heads &lt;- \n  pterosaur_data %&gt;% filter(TAIL &gt; 200 & SKULL &lt; 90)\n\nlong_tails_or_small_heads &lt;- \n2  pterosaur_data %&gt;% filter(TAIL &gt; 200 | SKULL &lt; 90)\n\n\n1\n\n== is needed to filter\n\n2\n\n| indicates or\n\n\n\n\n\nDealing with NA values\n\n# remove NAs in single column\npterosaur_data %&gt;% filter(!is.na(ORBIT))\n\n# remove all rows with NAs\npterosaur_data %&gt;% filter_at(vars(2:15), all_vars(!is.na(.)))"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#filter-use-cases",
+    "href": "R_lecture_1_student.html#filter-use-cases",
+    "title": "An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind pterosaurs that have longer necks than humerus’\n\n\n\n\n\nReturning to the original data, remove measurements with NA TRUNK_LENGTH values, for individuals with IDs greater than 50\n\n\n\n\n\nTrim the data to only include SKULL lengths between 60 and 90mm"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#filter-use-cases-1",
+    "href": "R_lecture_1_student.html#filter-use-cases-1",
+    "title": "An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind the individuals with the maximum and minimum tail lengths\n\n\n\n\n\nFind the individuals with tail lengths above the mean of the sampled population"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#mutate-modifying-existing-columns",
+    "href": "R_lecture_1_student.html#mutate-modifying-existing-columns",
+    "title": "An introduction to coding in R",
+    "section": "mutate(): modifying existing columns",
+    "text": "mutate(): modifying existing columns\nLet’s change the units of measurement to centimetres\n\npterosaur_data_cm &lt;- pterosaur_data %&gt;% mutate(ORBIT = ORBIT/10)\n\n\nThat only changed the values in one column - no matter, try this:\n\npterosaur_data_cm &lt;- \n  pterosaur_data %&gt;% \n1  mutate(across(ORBIT:TIBIA, ~ .x/10))\n\n\n1\n\nacross applies a function to all specified columns"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#mutate-creating-new-columns",
+    "href": "R_lecture_1_student.html#mutate-creating-new-columns",
+    "title": "An introduction to coding in R",
+    "section": "mutate(): creating new columns",
+    "text": "mutate(): creating new columns\nThe total length of a wing is roughly the sum of the lengths of the humerus, radius, fourth metacarpal and the four wing phalanxs. With mutate(), we can calculate this and add it to the dataset:\n\n\npterosaur_data &lt;-\n  pterosaur_data %&gt;% \n  mutate(single_wing_length = \n           HUMERUS + RADIUS + METACARPAL_4 + WING_PHALANX_1 + \n           WING_PHALANX_2 + WING_PHALANX_3 + WING_PHALANX_4) %&gt;% \n  select(Individual_ID, single_wing_length, everything())"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#conditional-mutation",
+    "href": "R_lecture_1_student.html#conditional-mutation",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\nCan we place individuals into phenotypic classes?"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#conditional-mutation-1",
+    "href": "R_lecture_1_student.html#conditional-mutation-1",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\npterosaur_data_age_structured &lt;-\n  pterosaur_data %&gt;% \n  mutate(Phenotypic_class = case_when(\n1    single_wing_length &lt; 300 ~ \"Small\",\n2    single_wing_length &gt;= 300 ~ \"Large\",\n3    .default = \"Unknown\"))\n\npterosaur_data_age_structured %&gt;% \n  select(Individual_ID, Phenotypic_class, single_wing_length)\n\n\n1\n\nFor this subset of cases…\n\n2\n\nFor a second subset of cases…\n\n3\n\nFor all remaining cases…\n\n\n\n\n\n\n# A tibble: 138 × 3\n   Individual_ID Phenotypic_class single_wing_length\n           &lt;dbl&gt; &lt;chr&gt;                         &lt;dbl&gt;\n 1             1 Small                          183.\n 2             2 Small                          174.\n 3             3 Unknown                         NA \n 4             4 Small                          189.\n 5             5 Small                          166.\n 6             6 Unknown                         NA \n 7             7 Small                          164.\n 8             8 Unknown                         NA \n 9             9 Unknown                         NA \n10            10 Small                          221 \n# ℹ 128 more rows"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#conditional-mutation-2",
+    "href": "R_lecture_1_student.html#conditional-mutation-2",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\nIt’s also possible to mutate a single row\n\npterosaur_data %&gt;% \n  mutate(Sex = case_when(Individual_ID == 1 ~ \"Special\",\n                         .default = \"Ordinary\"))"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#build-your-phenotypic-classes",
+    "href": "R_lecture_1_student.html#build-your-phenotypic-classes",
+    "title": "An introduction to coding in R",
+    "section": "Build your phenotypic classes",
+    "text": "Build your phenotypic classes\n\nNot every individual has a recorded wing length.\nBut there are other morphological traits in the dataset\nCreate a classification criteria and implement it"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#phenotypic-classes",
+    "href": "R_lecture_1_student.html#phenotypic-classes",
+    "title": "An introduction to coding in R",
+    "section": "Phenotypic classes",
+    "text": "Phenotypic classes"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#bonus-content-summarise",
+    "href": "R_lecture_1_student.html#bonus-content-summarise",
+    "title": "An introduction to coding in R",
+    "section": "Bonus content: summarise()",
+    "text": "Bonus content: summarise()\n\nThe logic of mutate() can be extended to summarise() row values\nRows can be grouped to summarise conditionally using the group_by function\n\n\n\npterosaur_data_age_structured %&gt;% \n  group_by(Phenotypic_class) %&gt;% \n1  summarise(\"Wing length\" = mean(single_wing_length, na.rm = T))\n\n\n1\n\nmean() has a built-in way to deal with NA values\n\n\n\n\n\n\n# A tibble: 3 × 2\n  Phenotypic_class `Wing length`\n  &lt;chr&gt;                    &lt;dbl&gt;\n1 Large                     490.\n2 Small                     197.\n3 Unknown                   NaN"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#your-task",
+    "href": "R_lecture_1_student.html#your-task",
+    "title": "An introduction to coding in R",
+    "section": "Your task",
+    "text": "Your task\n\nSplit pterosaurs into phenotypic classes and remove those you can’t categorise\nTrim the dataframe to only include class, skull, length, wing length and tail length\nSummarise the data to show the mean for morphological traits, for each class\nConvert to cm and round to zero decimal places\n\nFocus on writing clear code, with comments (using the #) accompanying each important step.\nHint: the round() function can be used inside mutate()"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#table-making",
+    "href": "R_lecture_1_student.html#table-making",
+    "title": "An introduction to coding in R",
+    "section": "Table making",
+    "text": "Table making\nOnce complete, pass your polished dataframe to this function with the %&gt;% to make a neat table\n\n# your dataframe goes here %&gt;% \n1 pander(split.cell = 20, split.table = Inf)\n\n\n1\n\nSee ?pander"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#expanding-our-vocabulary",
+    "href": "R_lecture_1_student.html#expanding-our-vocabulary",
+    "title": "An introduction to coding in R",
+    "section": "Expanding our vocabulary",
+    "text": "Expanding our vocabulary\n\ndistinct()\nslice()\nn()\nbind_rows()"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#joins",
+    "href": "R_lecture_1_student.html#joins",
+    "title": "An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\nWhat if we have two separate dataframes that we want to merge?\n\nfive_random_pterosaurs &lt;- pterosaur_data %&gt;% \n  filter_at(vars(2:15), all_vars(!is.na(.)))  %&gt;% \n  slice_sample(n = 8)\n\neye_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, ORBIT) %&gt;% \n  arrange(Individual_ID)\n\ntail_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, TAIL) %&gt;% \n  arrange(Individual_ID)"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#joins-1",
+    "href": "R_lecture_1_student.html#joins-1",
+    "title": "An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\n\n\n\neye_stats\n\n# A tibble: 5 × 2\n  Individual_ID ORBIT\n          &lt;dbl&gt; &lt;dbl&gt;\n1            26  15  \n2            29  13  \n3            43  20  \n4            54  20  \n5            76  26.5\n\n\n\n\ntail_stats\n\n# A tibble: 5 × 2\n  Individual_ID  TAIL\n          &lt;dbl&gt; &lt;dbl&gt;\n1            10   125\n2            26   163\n3            29   148\n4            54   254\n5            76   343\n\n\n\nFor joins to work, there needs to be some common element that links the two dataframes"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#left_join",
+    "href": "R_lecture_1_student.html#left_join",
+    "title": "An introduction to coding in R",
+    "section": "left_join()",
+    "text": "left_join()\n\nAdd columns from dataframe y to dataframe x\nThe comment element is the Individual_ID\nKeep all observations in x\n\n\n\n\neye_stats %&gt;% \n  left_join(tail_stats)\n\n# A tibble: 5 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            26  15     163\n2            29  13     148\n3            43  20      NA\n4            54  20     254\n5            76  26.5   343\n\n\n\n\ntail_stats %&gt;% \n  left_join(eye_stats)\n\n# A tibble: 5 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            10   125  NA  \n2            26   163  15  \n3            29   148  13  \n4            54   254  20  \n5            76   343  26.5"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#inner_join",
+    "href": "R_lecture_1_student.html#inner_join",
+    "title": "An introduction to coding in R",
+    "section": "inner_join()",
+    "text": "inner_join()\n\nOnly keep rows in x that have a matching common element in y\n\n\n\n\neye_stats %&gt;% \n  inner_join(tail_stats)\n\n# A tibble: 4 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            26  15     163\n2            29  13     148\n3            54  20     254\n4            76  26.5   343\n\n\n\n\ntail_stats %&gt;% \n  inner_join(eye_stats)\n\n# A tibble: 4 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            26   163  15  \n2            29   148  13  \n3            54   254  20  \n4            76   343  26.5"
+  },
+  {
+    "objectID": "R_lecture_1_student.html#build-a-quarto-report",
+    "href": "R_lecture_1_student.html#build-a-quarto-report",
+    "title": "An introduction to coding in R",
+    "section": "Build a quarto report",
+    "text": "Build a quarto report\n\nUse quarto to publish a report, documenting your code\nUse this time to tidy your code\nUse comments within code chunks\nWrite explanations outside of code chunks\nSee the _quarto.yml file"
+  },
+  {
+    "objectID": "R_lecture_1.html#rhamphorhynchus",
+    "href": "R_lecture_1.html#rhamphorhynchus",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Rhamphorhynchus",
+    "text": "Rhamphorhynchus"
+  },
+  {
+    "objectID": "R_lecture_2.html#build-your-phenotypic-classes",
+    "href": "R_lecture_2.html#build-your-phenotypic-classes",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Build your phenotypic classes",
+    "text": "Build your phenotypic classes\n\nNot every individual has a recorded wing length.\nBut there are other morphological traits in the dataset\nCreate a classification criteria and implement it"
+  },
+  {
+    "objectID": "R_lecture_2.html#phenotypic-classes",
+    "href": "R_lecture_2.html#phenotypic-classes",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Phenotypic classes",
+    "text": "Phenotypic classes\n\npterosaur_data_classes &lt;-\n  pterosaur_data %&gt;% \n  mutate(single_wing_length = \n           HUMERUS + RADIUS + METACARPAL_4 + WING_PHALANX_1 + \n           WING_PHALANX_2 + WING_PHALANX_3 + WING_PHALANX_4) %&gt;% \n  mutate(Size_class = case_when(single_wing_length &lt; 300 ~ \"Small\", \n                               single_wing_length &gt;= 300 ~ \"Large\", \n                               WING_PHALANX_1 &lt; 80 ~ \"Small\",\n                               WING_PHALANX_1 &gt;= 80 ~ \"Large\",\n                               FEMUR &lt; 20 ~ \"Small\",\n                               FEMUR &gt;= 20 ~ \"Large\",\n                               TAIL &lt; 150 ~ \"Small\",\n                               TAIL &gt;= 200 ~ \"Large\",\n                               SKULL &lt; 80 ~ \"Small\",\n                               SKULL &gt;= 100 ~ \"Large\",\n                               HUMERUS &lt; 25 ~ \"Small\",\n                               HUMERUS &gt;= 30 ~ \"Large\",\n                               SKULL &lt; 90 ~ \"Small\",\n                               SKULL &gt;= 90 ~ \"Large\",\n                               .default = \"Unknown\")) %&gt;% \n  select(Individual_ID, Size_class, single_wing_length, everything())"
+  },
+  {
+    "objectID": "R_lecture_2.html#bonus-content-summarise",
+    "href": "R_lecture_2.html#bonus-content-summarise",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Bonus content: summarise()",
+    "text": "Bonus content: summarise()\n\nThe logic of mutate() can be extended to summarise() row values\nRows can be grouped to summarise conditionally using the group_by function\n\n\n\npterosaur_data_classes %&gt;% \n  group_by(Size_class) %&gt;% \n1  summarise(\"Wing length\" = mean(single_wing_length, na.rm = T))\n\n\n1\n\nmean() has a built-in way to deal with NA values\n\n\n\n\n\n\n# A tibble: 3 × 2\n  Size_class `Wing length`\n  &lt;chr&gt;              &lt;dbl&gt;\n1 Large               490.\n2 Small               197.\n3 Unknown             NaN"
+  },
+  {
+    "objectID": "R_lecture_2.html#expanding-our-vocabulary",
+    "href": "R_lecture_2.html#expanding-our-vocabulary",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Expanding our vocabulary",
+    "text": "Expanding our vocabulary\n\npivot_longer()\nslice_sample()\nn()"
+  },
+  {
+    "objectID": "R_lecture_2.html#joins",
+    "href": "R_lecture_2.html#joins",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\nWhat if we have two separate dataframes that we want to merge?\n\nfive_random_pterosaurs &lt;- pterosaur_data_classes %&gt;% \n  filter_at(vars(ORBIT, TAIL), all_vars(!is.na(.)))  %&gt;% \n  slice_sample(n = 8)\n\neye_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, ORBIT) %&gt;% \n  arrange(Individual_ID)\n\ntail_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, TAIL) %&gt;% \n  arrange(Individual_ID)"
+  },
+  {
+    "objectID": "R_lecture_2.html#joins-1",
+    "href": "R_lecture_2.html#joins-1",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\n\n\n\neye_stats\n\n# A tibble: 5 × 2\n  Individual_ID ORBIT\n          &lt;dbl&gt; &lt;dbl&gt;\n1            45  22.5\n2            54  20  \n3            74  26  \n4            77  27  \n5            85  10.5\n\n\n\n\ntail_stats\n\n# A tibble: 5 × 2\n  Individual_ID  TAIL\n          &lt;dbl&gt; &lt;dbl&gt;\n1            33 250  \n2            54 254  \n3            74 325  \n4            85  93.5\n5           137 325  \n\n\n\nFor joins to work, there needs to be some common element that links the two dataframes"
+  },
+  {
+    "objectID": "R_lecture_2.html#left_join",
+    "href": "R_lecture_2.html#left_join",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "left_join()",
+    "text": "left_join()\n\nAdd columns from dataframe y to dataframe x\nThe comment element is the Individual_ID\nKeep all observations in x\n\n\n\n\neye_stats %&gt;% \n  left_join(tail_stats)\n\n# A tibble: 5 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            45  22.5  NA  \n2            54  20   254  \n3            74  26   325  \n4            77  27    NA  \n5            85  10.5  93.5\n\n\n\n\ntail_stats %&gt;% \n  left_join(eye_stats)\n\n# A tibble: 5 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            33 250    NA  \n2            54 254    20  \n3            74 325    26  \n4            85  93.5  10.5\n5           137 325    NA"
+  },
+  {
+    "objectID": "R_lecture_2.html#inner_join",
+    "href": "R_lecture_2.html#inner_join",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "inner_join()",
+    "text": "inner_join()\n\nOnly keep rows in x that have a matching common element in y\n\n\n\n\neye_stats %&gt;% \n  inner_join(tail_stats)\n\n# A tibble: 3 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            54  20   254  \n2            74  26   325  \n3            85  10.5  93.5\n\n\n\n\ntail_stats %&gt;% \n  inner_join(eye_stats)\n\n# A tibble: 3 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            54 254    20  \n2            74 325    26  \n3            85  93.5  10.5"
+  },
+  {
+    "objectID": "R_lecture_2.html#build-a-quarto-report",
+    "href": "R_lecture_2.html#build-a-quarto-report",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Build a quarto report",
+    "text": "Build a quarto report\n\nUse quarto to publish a report, documenting your code\nUse this time to tidy your code\nUse comments within code chunks\nWrite explanations outside of code chunks\nSee the _quarto.yml file"
+  },
+  {
+    "objectID": "R_lecture_2.html#visualising-data",
+    "href": "R_lecture_2.html#visualising-data",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Visualising data",
+    "text": "Visualising data\n\nAt its core, science communication is most effective through visual mediums\nThe ggplot2 package is included in the tidyverse"
+  },
+  {
+    "objectID": "R_lecture_2.html#ggplot",
+    "href": "R_lecture_2.html#ggplot",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "ggplot()",
+    "text": "ggplot()\n\nBuild plots one layer at a time\nLayers are added on top of one another\nNew layers are added with the + symbol\n+ == %&gt;% in ggplot-land\n\n\nGetting started\n\npterosaur_data_classes %&gt;% \n  ggplot(aes())\n\n\nggplot() provides an empty canvas\naes determines how variables are mapped to visual aesthetics"
+  },
+  {
+    "objectID": "R_lecture_2.html#building-a-ggplot",
+    "href": "R_lecture_2.html#building-a-ggplot",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Building a ggplot",
+    "text": "Building a ggplot\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Phenotypic_class)) +\n  geom_histogram(binwidth = 0.1)"
+  },
+  {
+    "objectID": "R_lecture_2.html#building-a-nice-ggplot",
+    "href": "R_lecture_2.html#building-a-nice-ggplot",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Building a nice ggplot",
+    "text": "Building a nice ggplot\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Phenotypic_class)) +\n  geom_density(colour = NA, alpha = 0.7) +\n  labs(x = \"Skull length (cm)\",\n       y = \"Estimated prop. individuals\",\n       fill = \"Phenotypic class\") +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) +\n  scale_x_continuous(expand = c(0, 0),\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),\n                     limits = c(0, 20.0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "R_lecture_2.html#building-a-nice-ggplot-output",
+    "href": "R_lecture_2.html#building-a-nice-ggplot-output",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Building a nice ggplot",
+    "text": "Building a nice ggplot"
+  },
+  {
+    "objectID": "R_lecture_2.html#building-a-hypothesis",
+    "href": "R_lecture_2.html#building-a-hypothesis",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Building a hypothesis",
+    "text": "Building a hypothesis\nWith all of the skills you now possess, outline your hypothesis for why there are discrete size classes in the Rhamphorhynchus dataset. Write the report up in quarto, making sure to use visual summaries of the data to support your hypothesis.\nMake sure to:\n\nTidy your code\nUse comments within code chunks\nWrite explanations outside of code chunks\nSee the _quarto.yml file\nQuarto html editing"
+  },
+  {
+    "objectID": "R_lecture_2.html#your-task",
+    "href": "R_lecture_2.html#your-task",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Your task",
+    "text": "Your task\n\nSplit pterosaurs into phenotypic classes and remove those you can’t categorise\nTrim the dataframe to only include the relevant measures\nSummarise the data to show the mean for your chosen morphological traits, for each class\nConvert to cm and round to zero decimal places\n\nFocus on writing clear code, with comments (using the #) accompanying each important step.\nHint: the round() function can be used inside mutate()"
+  },
+  {
+    "objectID": "R_lecture_2.html#table-making",
+    "href": "R_lecture_2.html#table-making",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Table making",
+    "text": "Table making\nOnce complete, pass your polished dataframe to this function with the %&gt;% to make a neat table\n\n# your dataframe goes here %&gt;% \n1 pander(split.cell = 20, split.table = Inf)\n\n\n1\n\nSee ?pander"
+  },
+  {
+    "objectID": "R_lecture_2.html#recapping-yesterday",
+    "href": "R_lecture_2.html#recapping-yesterday",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Recapping yesterday",
+    "text": "Recapping yesterday\nThe Holy trinity:\n\nselect()\nfilter()\nmutate()"
+  },
+  {
+    "objectID": "R_lecture_2.html#fix-the-labels",
+    "href": "R_lecture_2.html#fix-the-labels",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Fix the labels",
+    "text": "Fix the labels\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\")"
+  },
+  {
+    "objectID": "R_lecture_2.html#fix-the-theming",
+    "href": "R_lecture_2.html#fix-the-theming",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Fix the theming",
+    "text": "Fix the theming\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  theme_classic() + # new\n  theme(panel.grid.major = element_line(), # new\n        text = element_text(size= 14)) # new"
+  },
+  {
+    "objectID": "R_lecture_2.html#fix-the-axis",
+    "href": "R_lecture_2.html#fix-the-axis",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Fix the axis",
+    "text": "Fix the axis\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_x_continuous(expand = c(0, 0), # new\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0), # new\n                     limits = c(0, 20.0)) + # new\n  scale_y_continuous(expand = c(0, 0)) + # new\n  theme_classic() + \n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "R_lecture_2.html#change-the-colours",
+    "href": "R_lecture_2.html#change-the-colours",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Change the colours",
+    "text": "Change the colours\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_x_continuous(expand = c(0, 0),\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),\n                     limits = c(0, 20.0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) + # new\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "R_lecture_2.html#change-to-density-plot",
+    "href": "R_lecture_2.html#change-to-density-plot",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Change to density plot",
+    "text": "Change to density plot\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Phenotypic_class)) + \n  geom_density(colour = NA, alpha = 0.7) + # new\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Phenotypic class\") +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) +\n  scale_x_continuous(expand = c(0, 0),\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),\n                     limits = c(0, 20.0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "R_lecture_2.html#the-scatterplot-geom_point",
+    "href": "R_lecture_2.html#the-scatterplot-geom_point",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "The scatterplot: geom_point()",
+    "text": "The scatterplot: geom_point()\n\npterosaur_data_classes %&gt;%\n  ggplot(aes(x = ORBIT, y = WING_PHALANX_1)) +\n  geom_point()"
+  },
+  {
+    "objectID": "R_lecture_2.html#building-a-geom_histogram",
+    "href": "R_lecture_2.html#building-a-geom_histogram",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Building a geom_histogram()",
+    "text": "Building a geom_histogram()\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1)"
+  },
+  {
+    "objectID": "R_lecture_2.html#change-to-geom_density",
+    "href": "R_lecture_2.html#change-to-geom_density",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Change to geom_density()",
+    "text": "Change to geom_density()\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) + \n  geom_density(colour = NA, alpha = 0.7) + # new\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) +\n  scale_x_continuous(expand = c(0, 0),\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),\n                     limits = c(0, 20.0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "R_lecture_2.html#make-improvements",
+    "href": "R_lecture_2.html#make-improvements",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Make improvements",
+    "text": "Make improvements\n\npterosaur_data_classes %&gt;%\n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point() +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\") +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "R_lecture_2.html#geom_point",
+    "href": "R_lecture_2.html#geom_point",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "geom_point()",
+    "text": "geom_point()\n\npterosaur_data_classes %&gt;% filter(Size_class != \"Unknown\") %&gt;% \n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point(aes(fill = Size_class), shape = 21, size = 5, alpha = 0.8, \n             colour = \"black\") +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\", \n       fill = \"Size class\") +\n  scale_fill_manual(values = c(met.brewer(\"Hiroshige\")[4], \n                               met.brewer(\"Hiroshige\")[6])) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "R_lecture_2.html#continuous-vs-discrete-colours",
+    "href": "R_lecture_2.html#continuous-vs-discrete-colours",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Continuous vs discrete colours",
+    "text": "Continuous vs discrete colours\n\npterosaur_data_classes %&gt;% filter(Size_class != \"Unknown\") %&gt;% \n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point(aes(fill = ORBIT/10), shape = 21, size = 5, alpha = 0.9, \n             colour = \"black\") +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\", \n       fill = \"Orbit\\nlength\") +\n  scale_fill_gradientn(colors=met.brewer(\"Hiroshige\", direction = -1)) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "R_lecture_2.html#the-heat-map-geom_tile",
+    "href": "R_lecture_2.html#the-heat-map-geom_tile",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "The heat map: geom_tile()",
+    "text": "The heat map: geom_tile()"
+  },
+  {
+    "objectID": "R_lecture_2.html#general-tips",
+    "href": "R_lecture_2.html#general-tips",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "General tips",
+    "text": "General tips\n\nalpha: changes the transparency\nfill: colours the inside of elements\ncolour: colours the outlines of elements\n\nIf you want these to change with your data, place them inside aes()\nMany more plot styles can be found here"
+  },
+  {
+    "objectID": "R_lecture_2.html#the-power-of-quarto",
+    "href": "R_lecture_2.html#the-power-of-quarto",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "The power of Quarto",
+    "text": "The power of Quarto\nTom’s supplementary material"
+  },
+  {
+    "objectID": "R_lecture_2.html#joyplots",
+    "href": "R_lecture_2.html#joyplots",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Joyplots",
+    "text": "Joyplots\n\n# use pivot_longer to get all traits into single column\n\npterosaur_data_classes %&gt;% \n  select(!c(single_wing_length)) %&gt;% \n  pivot_longer(cols = ORBIT:TIBIA, \n               names_to = \"Trait\",\n               values_to = \"Length\") %&gt;%\n  group_by(Trait) %&gt;% \n  mutate(Mean_value = mean(Length, na.rm = T)) %&gt;% \n  ungroup() %&gt;% \n  \n  # plot\n  ggplot(aes(x = Length, y = fct_reorder(Trait, Mean_value))) +\n  geom_density_ridges(alpha = 0.5, scale = 3, linewidth = 0,\n                      fill = \"#05595B\", color = NA) +\n  scale_x_continuous(limits = c(0, NA), expand = c(0, 0)) +\n  labs(y = \"Trait\", x = \"Length (mm)\") +\n  theme_minimal() +\n  theme(axis.text = element_text(size = 12),\n        axis.title = element_text(size = 13),\n        panel.grid.major.y = element_line(size = 0.5))"
+  },
+  {
+    "objectID": "R_lecture_2.html#joyplots-output",
+    "href": "R_lecture_2.html#joyplots-output",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Joyplots",
+    "text": "Joyplots"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#goals",
+    "href": "Masters_R_workshop.html#goals",
+    "title": "An introduction to coding in R",
+    "section": "Goals",
+    "text": "Goals\n\nSetup R to work as you intend\nCode in a reproducible, clear style\nGain a familiarity with key data wrangling functions\nBecome well versed in creating figures with ggplot\nCreate a document that should help you in the future"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#setting-up",
+    "href": "Masters_R_workshop.html#setting-up",
+    "title": "An introduction to coding in R",
+    "section": "Setting up",
+    "text": "Setting up\nMake your interface look nice:\n\nTools &gt; global options\nLight or dark modes\nFira code: https://github.com/tonsky/FiraCode/wiki/RStudio-instructions"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#projects",
+    "href": "Masters_R_workshop.html#projects",
+    "title": "An introduction to coding in R",
+    "section": "Projects",
+    "text": "Projects\nFile &gt; New project\n\nExisting directory: places project in an existing folder\nNew directory: creates new folder\nVersion control: handy if you want to use github\n\nProjects are powerful:\n\nR knows where to look for files\nNo need to worry about setting working directories\nGreat for sharing"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#quarto",
+    "href": "Masters_R_workshop.html#quarto",
+    "title": "An introduction to coding in R",
+    "section": "Quarto",
+    "text": "Quarto\n\nOpen a quarto document in your new project\nFile &gt; New File &gt; Quarto document\nSave the document within the project directory (where you already are)\nSave the _quarto.yml provided in the email within this directory\nRender the document"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#packages",
+    "href": "Masters_R_workshop.html#packages",
+    "title": "An introduction to coding in R",
+    "section": "Packages",
+    "text": "Packages\nThe base version of R can be upgraded with packages\nWe shall use the tidyverse collection of packages.\n\n#install.packages(\"tidyverse\")\n#install.packages(\"pander\")\n#install.packages(\"patchwork\")\n#install.packages(\"MetBrewer\")\n\nlibrary(tidyverse) # for tidy coding\nlibrary(tinytable) # for nice tables\nlibrary(patchwork) # for aligning plots\nlibrary(MetBrewer) # for nice colours to use when making figures\nlibrary(ggridges) # for nice density plots"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#the-tidyverse",
+    "href": "Masters_R_workshop.html#the-tidyverse",
+    "title": "An introduction to coding in R",
+    "section": "The tidyverse",
+    "text": "The tidyverse\n\n\n\n\n\nA collection of packages\nAll follow the same logic\nQuite different from base R\n“Supremely readable”"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#rhamphorhynchus-muensteri",
+    "href": "Masters_R_workshop.html#rhamphorhynchus-muensteri",
+    "title": "An introduction to coding in R",
+    "section": "Rhamphorhynchus muensteri",
+    "text": "Rhamphorhynchus muensteri\n\n\n\n\n\nA Bavarian pterosaur from the Jurassic\n140 different individuals have been found\nData from Habib and Hone 2024 PeerJ"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#the-dataset",
+    "href": "Masters_R_workshop.html#the-dataset",
+    "title": "An introduction to coding in R",
+    "section": "The dataset",
+    "text": "The dataset\n\n1pterosaur_data &lt;-\n2  read_delim(\"pterosaur_data.csv\", delim = \";\")\n\n3pterosaur_data\n\n\n1\n\nAssign a name to the dataset\n\n2\n\nLoad the csv file and specify the separator between columns\n\n3\n\nDisplay the dataset\n\n\n\n\n\n\n# A tibble: 138 × 15\n   Individual_ID ORBIT SKULL  NECK TRUNK_LENGTH  TAIL HUMERUS RADIUS\n           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;\n 1             1  11      40  21.5         47.5  106.    16.5   26.7\n 2             2  10      35  18           NA    112     15.3   26  \n 3             3  NA      NA  NA           36     85     NA     NA  \n 4             4  NA      36  NA           39    115     17     28  \n 5             5  NA      NA  15.5         36.5  100     14.6   23.8\n 6             6  12      35  23           40    110     NA     NA  \n 7             7  10      35  20           41    106     15.5   24  \n 8             8  NA      31  NA           NA     NA     14.5   24  \n 9             9  NA      NA  17           36     79     NA     NA  \n10            10  12.5    41  23           47    125     19     32  \n# ℹ 128 more rows\n# ℹ 7 more variables: METACARPAL_4 &lt;dbl&gt;, WING_PHALANX_1 &lt;dbl&gt;,\n#   WING_PHALANX_2 &lt;dbl&gt;, WING_PHALANX_3 &lt;dbl&gt;, WING_PHALANX_4 &lt;dbl&gt;,\n#   FEMUR &lt;dbl&gt;, TIBIA &lt;dbl&gt;"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#rhamphorhynchus",
+    "href": "Masters_R_workshop.html#rhamphorhynchus",
+    "title": "An introduction to coding in R",
+    "section": "Rhamphorhynchus",
+    "text": "Rhamphorhynchus"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#some-intriguing-patterns",
+    "href": "Masters_R_workshop.html#some-intriguing-patterns",
+    "title": "An introduction to coding in R",
+    "section": "Some intriguing patterns",
+    "text": "Some intriguing patterns"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#the-key-to-tidyverse-coding",
+    "href": "Masters_R_workshop.html#the-key-to-tidyverse-coding",
+    "title": "An introduction to coding in R",
+    "section": "The key to tidyverse coding: %>%",
+    "text": "The key to tidyverse coding: %&gt;%\nThis weird symbol is called a pipe\n\nYou should read this as then\ndo this, then do this…\nallows you to chain your code\n\n\n\npterosaur_data %&gt;% view()\n\nIn common language this means: load the pterosaur data then view it in a new tab"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#the-holy-trinity",
+    "href": "Masters_R_workshop.html#the-holy-trinity",
+    "title": "An introduction to coding in R",
+    "section": "The holy trinity",
+    "text": "The holy trinity\n\nselect(): order, rename or drop columns\nfilter(): keep or remove specific rows\nmutate(): create new columns or edit existing ones\n\nIf you ever need help with a function, ? is your friend\n\n\n# An example of how to get some help\n?select"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#select",
+    "href": "Masters_R_workshop.html#select",
+    "title": "An introduction to coding in R",
+    "section": "select()",
+    "text": "select()\nRemoving columns you aren’t interested in:\n\npterosaur_data %&gt;% select(Individual_ID, TAIL)\n\n1pterosaur_data %&gt;% select(!c(Individual_ID, TAIL))\n\n2pterosaur_data %&gt;% select(contains(\"WING\"))\n\n3pterosaur_data %&gt;% select(1, 5)\n\n\n1\n\nthe ! reverses the statement\n\n2\n\ncontains chooses columns with names that contain a pattern\n\n3\n\nDangerous coding! Avoid.\n\n\n\n\n\nChanging column names:\n\npterosaur_data %&gt;% select(Specimen = Individual_ID)\n\n# if you want to keep all other columns\n\npterosaur_data %&gt;% select(Specimen = Individual_ID, everything())\n\n# a recommended alternative\n\npterosaur_data %&gt;% rename(Specimen = Individual_ID)"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#select-use-cases",
+    "href": "Masters_R_workshop.html#select-use-cases",
+    "title": "An introduction to coding in R",
+    "section": "select() use cases",
+    "text": "select() use cases\n\nCreate a new dataset that only contains the ID of the individual and wing measurements for phalanxs 2, 3 and 4.\n\n\n\npterosaur_subset &lt;-\n  pterosaur_data %&gt;% \n  select(Individual_ID, 11:13) \n\n\n\nReturning to the original data, remove the measurements for wing phalanx 2 and 4\n\n\n\npterosaur_subset_2 &lt;-\n  pterosaur_data %&gt;% \n  select(!c(WING_PHALANX_2, WING_PHALANX_4)) \n\n\n\nWhy does this cause an error?\n\n\npterosaur_data %&gt;% select(contains(WING))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#filter",
+    "href": "Masters_R_workshop.html#filter",
+    "title": "An introduction to coding in R",
+    "section": "filter()",
+    "text": "filter()\nChoosing rows of interest\n\nLarge_data &lt;- pterosaur_data %&gt;% filter(TAIL &gt; 200)\n\n1ten_cm_tails &lt;- pterosaur_data %&gt;% filter(TAIL == 100)\n\nlong_tails_and_small_heads &lt;- \n  pterosaur_data %&gt;% filter(TAIL &gt; 200 & SKULL &lt; 90)\n\nlong_tails_or_small_heads &lt;- \n2  pterosaur_data %&gt;% filter(TAIL &gt; 200 | SKULL &lt; 90)\n\n\n1\n\n== is needed to filter\n\n2\n\n| indicates or\n\n\n\n\n\nDealing with NA values\n\n# remove NAs in single column\npterosaur_data %&gt;% filter(!is.na(ORBIT))\n\n# remove all rows with NAs\npterosaur_data %&gt;% filter_at(vars(2:15), all_vars(!is.na(.)))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#filter-use-cases",
+    "href": "Masters_R_workshop.html#filter-use-cases",
+    "title": "An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind pterosaurs that have longer necks than humerus’\n\n\n\nnecks_longer_than_forearms &lt;- pterosaur_data %&gt;% filter(NECK &gt; HUMERUS) \n\n\n\nReturning to the original data, remove measurements with NA TRUNK_LENGTH values, for individuals with IDs greater than 50\n\n\n\npterosaur_data %&gt;% \n  filter(!is.na(TRUNK_LENGTH) & Individual_ID &gt; 50) \n\n\n\nTrim the data to only include SKULL lengths between 60 and 90mm\n\n\n\nmedium_skulls &lt;- pterosaur_data %&gt;% filter(SKULL &lt;= 90 & SKULL &gt;= 60)"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#filter-use-cases-1",
+    "href": "Masters_R_workshop.html#filter-use-cases-1",
+    "title": "An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind the individuals with the maximum and minimum tail lengths\n\n\n\npterosaur_data %&gt;%\n  filter(!is.na(TAIL)) %&gt;% \n  filter(TAIL == max(TAIL) |\n           TAIL == min(TAIL)) \n\n\n\nFind the individuals with tail lengths above the mean of the sampled population\n\n\n\npterosaur_data %&gt;% \n  filter(!is.na(TAIL)) %&gt;% \n  filter(TAIL &gt; mean(TAIL))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#mutate-modifying-existing-columns",
+    "href": "Masters_R_workshop.html#mutate-modifying-existing-columns",
+    "title": "An introduction to coding in R",
+    "section": "mutate(): modifying existing columns",
+    "text": "mutate(): modifying existing columns\nLet’s change the units of measurement to centimetres\n\npterosaur_data_cm &lt;- pterosaur_data %&gt;% mutate(ORBIT = ORBIT/10)\n\n\nNow add 10cm to each orbit measurement (but don’t save this!)\n\npterosaur_data %&gt;% mutate(ORBIT = ORBIT + 10)"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#mutate-creating-new-columns",
+    "href": "Masters_R_workshop.html#mutate-creating-new-columns",
+    "title": "An introduction to coding in R",
+    "section": "mutate(): creating new columns",
+    "text": "mutate(): creating new columns\nThe total length of a wing is roughly the sum of the lengths of the humerus, radius, fourth metacarpal and the four wing phalanxs. With mutate(), we can calculate this and add it to the dataset:\n\n\npterosaur_data &lt;-\n  pterosaur_data %&gt;% \n  mutate(single_wing_length = \n           HUMERUS + RADIUS + METACARPAL_4 + WING_PHALANX_1 + \n           WING_PHALANX_2 + WING_PHALANX_3 + WING_PHALANX_4) %&gt;% \n  select(Individual_ID, single_wing_length, everything())"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#conditional-mutation",
+    "href": "Masters_R_workshop.html#conditional-mutation",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\nCan we place individuals into phenotypic classes?"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#conditional-mutation-1",
+    "href": "Masters_R_workshop.html#conditional-mutation-1",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\npterosaur_data_classes &lt;-\n  pterosaur_data %&gt;% \n  mutate(Size_class = case_when(\n1    single_wing_length &lt; 300 ~ \"Small\",\n2    single_wing_length &gt;= 300 ~ \"Large\",\n3    .default = \"Unknown\"))\n\npterosaur_data_classes %&gt;% \n  select(Individual_ID, Size_class, single_wing_length)\n\n\n1\n\nFor this subset of cases…\n\n2\n\nFor a second subset of cases…\n\n3\n\nFor all remaining cases…\n\n\n\n\n\n\n# A tibble: 138 × 3\n   Individual_ID Size_class single_wing_length\n           &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;\n 1             1 Small                    183.\n 2             2 Small                    174.\n 3             3 Unknown                   NA \n 4             4 Small                    189.\n 5             5 Small                    166.\n 6             6 Unknown                   NA \n 7             7 Small                    164.\n 8             8 Unknown                   NA \n 9             9 Unknown                   NA \n10            10 Small                    221 \n# ℹ 128 more rows"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#conditional-mutation-2",
+    "href": "Masters_R_workshop.html#conditional-mutation-2",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\nIt’s also possible to mutate a single row\n\npterosaur_data %&gt;% \n  mutate(Sex = case_when(Individual_ID == 1 ~ \"Special\",\n                         .default = \"Ordinary\"))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#build-your-phenotypic-classes",
+    "href": "Masters_R_workshop.html#build-your-phenotypic-classes",
+    "title": "An introduction to coding in R",
+    "section": "Build your phenotypic classes",
+    "text": "Build your phenotypic classes\n\nNot every individual has a recorded wing length.\nBut there are other morphological traits in the dataset\nCreate a classification criteria and implement it"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#phenotypic-classes",
+    "href": "Masters_R_workshop.html#phenotypic-classes",
+    "title": "An introduction to coding in R",
+    "section": "Phenotypic classes",
+    "text": "Phenotypic classes\n\npterosaur_data_classes &lt;-\n  pterosaur_data %&gt;% \n  mutate(Size_class = case_when(single_wing_length &lt; 300 ~ \"Small\", \n                               single_wing_length &gt;= 300 ~ \"Large\", \n                               WING_PHALANX_1 &lt; 80 ~ \"Small\",\n                               WING_PHALANX_1 &gt;= 80 ~ \"Large\",\n                               FEMUR &lt; 20 ~ \"Small\",\n                               FEMUR &gt;= 20 ~ \"Large\",\n                               TAIL &lt; 150 ~ \"Small\",\n                               TAIL &gt;= 200 ~ \"Large\",\n                               SKULL &lt; 80 ~ \"Small\",\n                               SKULL &gt;= 100 ~ \"Large\",\n                               HUMERUS &lt; 25 ~ \"Small\",\n                               HUMERUS &gt;= 30 ~ \"Large\",\n                               SKULL &lt; 90 ~ \"Small\",\n                               SKULL &gt;= 90 ~ \"Large\",\n                               .default = \"Unknown\")) %&gt;% \n  select(Individual_ID, Size_class, everything())"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#bonus-content-summarise",
+    "href": "Masters_R_workshop.html#bonus-content-summarise",
+    "title": "An introduction to coding in R",
+    "section": "Bonus content: summarise()",
+    "text": "Bonus content: summarise()\n\nThe logic of mutate() can be extended to summarise() row values\nRows can be grouped to summarise conditionally using the group_by function\n\n\n\npterosaur_data_classes %&gt;% \n  group_by(Size_class) %&gt;% \n1  summarise(\"Wing length\" = mean(single_wing_length, na.rm = T))\n\n\n1\n\nmean() has a built-in way to deal with NA values\n\n\n\n\n\n\n# A tibble: 3 × 2\n  Size_class `Wing length`\n  &lt;chr&gt;              &lt;dbl&gt;\n1 Large               490.\n2 Small               197.\n3 Unknown             NaN"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#your-task",
+    "href": "Masters_R_workshop.html#your-task",
+    "title": "An introduction to coding in R",
+    "section": "Your task",
+    "text": "Your task\n\nSplit pterosaurs into phenotypic classes and remove those you can’t categorise\nTrim the dataframe to only include class, skull, length, wing length and tail length\nSummarise the data to show the mean for morphological traits, for each class\nConvert to cm and round to zero decimal places\n\nFocus on writing clear code, with comments (using the #) accompanying each important step.\nHint: the round() function can be used inside mutate()"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#table-making",
+    "href": "Masters_R_workshop.html#table-making",
+    "title": "An introduction to coding in R",
+    "section": "Table making",
+    "text": "Table making\nOnce complete, pass your polished dataframe to this function with the %&gt;% to make a neat table\n\n# your dataframe goes here %&gt;% \n1 tt()\n\n\n1\n\nSee ?tinytable::tt"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#expanding-our-vocabulary",
+    "href": "Masters_R_workshop.html#expanding-our-vocabulary",
+    "title": "An introduction to coding in R",
+    "section": "Expanding our vocabulary",
+    "text": "Expanding our vocabulary\n\ndistinct()\nslice() and slice_sample()\nn()\nbind_rows()"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#joins",
+    "href": "Masters_R_workshop.html#joins",
+    "title": "An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\nWhat if we have two separate dataframes that we want to merge?\n\nfive_random_pterosaurs &lt;- pterosaur_data %&gt;% \n  filter_at(vars(2:15), all_vars(!is.na(.)))  %&gt;% \n  slice_sample(n = 8)\n\neye_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, ORBIT) %&gt;% \n  arrange(Individual_ID)\n\ntail_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, TAIL) %&gt;% \n  arrange(Individual_ID)"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#joins-1",
+    "href": "Masters_R_workshop.html#joins-1",
+    "title": "An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\n\n\n\neye_stats\n\n# A tibble: 5 × 2\n  Individual_ID ORBIT\n          &lt;dbl&gt; &lt;dbl&gt;\n1             7  10  \n2            26  15  \n3            29  13  \n4            76  26.5\n5            77  27  \n\n\n\n\ntail_stats\n\n# A tibble: 5 × 2\n  Individual_ID  TAIL\n          &lt;dbl&gt; &lt;dbl&gt;\n1            26   163\n2            29   148\n3            43   320\n4            54   254\n5            77   340\n\n\n\nFor joins to work, there needs to be some common element that links the two dataframes"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#left_join",
+    "href": "Masters_R_workshop.html#left_join",
+    "title": "An introduction to coding in R",
+    "section": "left_join()",
+    "text": "left_join()\n\nAdd columns from dataframe y to dataframe x\nThe comment element is the Individual_ID\nKeep all observations in x\n\n\n\n\neye_stats %&gt;% \n  left_join(tail_stats)\n\n# A tibble: 5 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             7  10      NA\n2            26  15     163\n3            29  13     148\n4            76  26.5    NA\n5            77  27     340\n\n\n\n\ntail_stats %&gt;% \n  left_join(eye_stats)\n\n# A tibble: 5 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            26   163    15\n2            29   148    13\n3            43   320    NA\n4            54   254    NA\n5            77   340    27"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#inner_join",
+    "href": "Masters_R_workshop.html#inner_join",
+    "title": "An introduction to coding in R",
+    "section": "inner_join()",
+    "text": "inner_join()\n\nOnly keep rows in x that have a matching common element in y\n\n\n\n\neye_stats %&gt;% \n  inner_join(tail_stats)\n\n# A tibble: 3 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            26    15   163\n2            29    13   148\n3            77    27   340\n\n\n\n\ntail_stats %&gt;% \n  inner_join(eye_stats)\n\n# A tibble: 3 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            26   163    15\n2            29   148    13\n3            77   340    27"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#build-a-quarto-report",
+    "href": "Masters_R_workshop.html#build-a-quarto-report",
+    "title": "An introduction to coding in R",
+    "section": "Build a quarto report",
+    "text": "Build a quarto report\n\nUse quarto to publish a report, documenting your code\nUse this time to tidy your code\nUse comments within code chunks\nWrite explanations outside of code chunks\nSee the _quarto.yml file"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#filter-regular-expressions",
+    "href": "Masters_R_workshop.html#filter-regular-expressions",
+    "title": "An introduction to coding in R",
+    "section": "filter(): regular expressions",
+    "text": "filter(): regular expressions\n\n== = equal to\n& = and\n| = or\n! = does not\n&gt; = greater than\n&lt; = less than"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#filter-handy-operators",
+    "href": "Masters_R_workshop.html#filter-handy-operators",
+    "title": "An introduction to coding in R",
+    "section": "filter(): handy operators",
+    "text": "filter(): handy operators\n\n== = equal to\n& = and\n| = or\n! = does not\n&gt; = greater than\n&lt; = less than"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#a-quick-important-tangent-the-tidyverse-for-loop",
+    "href": "Masters_R_workshop.html#a-quick-important-tangent-the-tidyverse-for-loop",
+    "title": "An introduction to coding in R",
+    "section": "A quick important tangent: the tidyverse ‘for loop’",
+    "text": "A quick important tangent: the tidyverse ‘for loop’\nIn the tidyverse, the accumulate() function replaces the for loop. Here’s how it works\n\nSay we want to work out debt accumulated on a loan over a 4 month period\nThe monthly interest rate is 10%, or if you’re unlucky 20%\n\n\n\ntibble(month = 1:4,\n       debt_10 = accumulate(1:3, .init = 100, ~ .x*1.1),\n       debt_20 = accumulate(1:3, .init = 100, ~ .x*1.2))\n\n\n~ .x * 1.1 adds 10% to each element, starting from the initial value 100"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#the-tidyverse-for-loop",
+    "href": "Masters_R_workshop.html#the-tidyverse-for-loop",
+    "title": "An introduction to coding in R",
+    "section": "The tidyverse ‘for loop’",
+    "text": "The tidyverse ‘for loop’\nIn the tidyverse, the accumulate() function replaces the for loop. Here’s how it works\n\nSay we want to work out debt accumulated on a loan over a 6 month period\nThe monthly interest rate is 10%, or if you’re unlucky 20%\n\n\n\ntibble(month = 0:6,\n       debt_10 = accumulate(1:6, .init = 100, ~ .x*1.1),  \n       debt_20 = accumulate(1:6, .init = 100, ~ .x*1.2)) \n\n\n~ .x * 1.1 adds 10% to each element, starting from the initial value 100"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#visualising-data",
+    "href": "Masters_R_workshop.html#visualising-data",
+    "title": "An introduction to coding in R",
+    "section": "Visualising data",
+    "text": "Visualising data\n\nAt its core, science communication is most effective through visual mediums\nThe ggplot2 package is included in the tidyverse"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#ggplot",
+    "href": "Masters_R_workshop.html#ggplot",
+    "title": "An introduction to coding in R",
+    "section": "ggplot()",
+    "text": "ggplot()\n\nBuild plots one layer at a time\nLayers are added on top of one another\nNew layers are added with the + symbol\n+ == %&gt;% in ggplot-land\n\n\nGetting started\n\npterosaur_data_classes %&gt;% \n  ggplot(aes())\n\n\nggplot() provides an empty canvas\naes determines how variables are mapped to visual aesthetics"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#building-a-geom_histogram",
+    "href": "Masters_R_workshop.html#building-a-geom_histogram",
+    "title": "An introduction to coding in R",
+    "section": "Building a geom_histogram()",
+    "text": "Building a geom_histogram()\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1)"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#fix-the-labels",
+    "href": "Masters_R_workshop.html#fix-the-labels",
+    "title": "An introduction to coding in R",
+    "section": "Fix the labels",
+    "text": "Fix the labels\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\")"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#fix-the-theming",
+    "href": "Masters_R_workshop.html#fix-the-theming",
+    "title": "An introduction to coding in R",
+    "section": "Fix the theming",
+    "text": "Fix the theming\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  theme_classic() + # new\n  theme(panel.grid.major = element_line(), # new\n        text = element_text(size= 14)) # new"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#fix-the-axis",
+    "href": "Masters_R_workshop.html#fix-the-axis",
+    "title": "An introduction to coding in R",
+    "section": "Fix the axis",
+    "text": "Fix the axis\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_x_continuous(expand = c(0, 0), # new\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0), # new\n                     limits = c(0, 20.0)) + # new\n  scale_y_continuous(expand = c(0, 0)) + # new\n  theme_classic() + \n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#change-the-colours",
+    "href": "Masters_R_workshop.html#change-the-colours",
+    "title": "An introduction to coding in R",
+    "section": "Change the colours",
+    "text": "Change the colours\nCheck out met.brewer\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_x_continuous(expand = c(0, 0),\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),\n                     limits = c(0, 20.0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) + # new\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#met.brewer",
+    "href": "Masters_R_workshop.html#met.brewer",
+    "title": "An introduction to coding in R",
+    "section": "Met.brewer",
+    "text": "Met.brewer\nPreview"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#change-to-geom_density",
+    "href": "Masters_R_workshop.html#change-to-geom_density",
+    "title": "An introduction to coding in R",
+    "section": "Change to geom_density()",
+    "text": "Change to geom_density()\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) + \n  geom_density(colour = NA, alpha = 0.7) + # new\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) +\n  scale_x_continuous(expand = c(0, 0),\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),\n                     limits = c(0, 20.0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#joyplots",
+    "href": "Masters_R_workshop.html#joyplots",
+    "title": "An introduction to coding in R",
+    "section": "Joyplots",
+    "text": "Joyplots\n\n# use pivot_longer to get all traits into single column\n\npterosaur_data_classes %&gt;% \n  select(!c(single_wing_length)) %&gt;% \n  pivot_longer(cols = ORBIT:TIBIA, \n               names_to = \"Trait\",\n               values_to = \"Length\") %&gt;%\n  group_by(Trait) %&gt;% \n  mutate(Mean_value = mean(Length, na.rm = T)) %&gt;% \n  ungroup() %&gt;% \n  \n  # plot\n  ggplot(aes(x = Length, y = fct_reorder(Trait, Mean_value))) +\n  geom_density_ridges(alpha = 0.5, scale = 3, linewidth = 0,\n                      fill = \"#05595B\", color = NA) +\n  scale_x_continuous(limits = c(0, NA), expand = c(0, 0)) +\n  labs(y = \"Trait\", x = \"Length (mm)\") +\n  theme_minimal() +\n  theme(axis.text = element_text(size = 12),\n        axis.title = element_text(size = 13),\n        panel.grid.major.y = element_line(size = 0.5))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#joyplots-output",
+    "href": "Masters_R_workshop.html#joyplots-output",
+    "title": "An introduction to coding in R",
+    "section": "Joyplots",
+    "text": "Joyplots"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#the-scatterplot-geom_point",
+    "href": "Masters_R_workshop.html#the-scatterplot-geom_point",
+    "title": "An introduction to coding in R",
+    "section": "The scatterplot: geom_point()",
+    "text": "The scatterplot: geom_point()\n\npterosaur_data_classes %&gt;%\n  ggplot(aes(x = ORBIT, y = WING_PHALANX_1)) +\n  geom_point()"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#make-improvements",
+    "href": "Masters_R_workshop.html#make-improvements",
+    "title": "An introduction to coding in R",
+    "section": "Make improvements",
+    "text": "Make improvements\n\npterosaur_data_classes %&gt;%\n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point() +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\") +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#geom_point",
+    "href": "Masters_R_workshop.html#geom_point",
+    "title": "An introduction to coding in R",
+    "section": "geom_point()",
+    "text": "geom_point()\n\npterosaur_data_classes %&gt;% filter(Size_class != \"Unknown\") %&gt;% \n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point(aes(fill = Size_class), shape = 21, size = 5, alpha = 0.8, \n             colour = \"black\") +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\", \n       fill = \"Size class\") +\n  scale_fill_manual(values = c(met.brewer(\"Hiroshige\")[4], \n                               met.brewer(\"Hiroshige\")[6])) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#continuous-vs-discrete-colours",
+    "href": "Masters_R_workshop.html#continuous-vs-discrete-colours",
+    "title": "An introduction to coding in R",
+    "section": "Continuous vs discrete colours",
+    "text": "Continuous vs discrete colours\n\npterosaur_data_classes %&gt;% filter(Size_class != \"Unknown\") %&gt;% \n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point(aes(fill = ORBIT/10), shape = 21, size = 5, alpha = 0.9, \n             colour = \"black\") +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\", \n       fill = \"Orbit\\nlength\") +\n  scale_fill_gradientn(colors=met.brewer(\"Hiroshige\", direction = -1)) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#general-tips",
+    "href": "Masters_R_workshop.html#general-tips",
+    "title": "An introduction to coding in R",
+    "section": "General tips",
+    "text": "General tips\n\nalpha: changes the transparency\nfill: colours the inside of elements\ncolour: colours the outlines of elements\n\nIf you want these to change with your data, place them inside aes()\nMany more plot styles can be found here"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#building-a-hypothesis",
+    "href": "Masters_R_workshop.html#building-a-hypothesis",
+    "title": "An introduction to coding in R",
+    "section": "Building a hypothesis",
+    "text": "Building a hypothesis\nWith all of the skills you now possess, outline your hypothesis for why there are discrete size classes in the Rhamphorhynchus dataset. Write the report up in quarto, making sure to use visual summaries of the data to support your hypothesis.\nMake sure to:\n\nTidy your code\nUse comments within code chunks\nWrite explanations outside of code chunks\nSee the _quarto.yml file\nQuarto html editing"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#the-power-of-quarto",
+    "href": "Masters_R_workshop.html#the-power-of-quarto",
+    "title": "An introduction to coding in R",
+    "section": "The power of Quarto",
+    "text": "The power of Quarto\nTom’s supplementary material\n\n\n\n\nEvolutionary Theory: R workshop"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#line-plots",
+    "href": "Masters_R_workshop.html#line-plots",
+    "title": "An introduction to coding in R",
+    "section": "Line plots",
+    "text": "Line plots\nLet’s return to our crippling interest rates\n\nline_plot &lt;-\n  tibble(month = 0:20,\n       `10%` = accumulate(1:20, .init = 5, ~ .x*1.1),  \n       `20%` = accumulate(1:20, .init = 5, ~ .x*1.2)) %&gt;% \n  pivot_longer(2:3, names_to = \"Interest_rate\", values_to = \"Amount_owed\") %&gt;% \n  # plot\n  ggplot(aes(x = month, y = Amount_owed, \n             group = Interest_rate, colour = Interest_rate)) +\n    geom_line(linewidth = 2)\n\nline_plot"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#make-it-beautiful",
+    "href": "Masters_R_workshop.html#make-it-beautiful",
+    "title": "An introduction to coding in R",
+    "section": "Make it beautiful",
+    "text": "Make it beautiful\n\nline_plot +\n  labs(x = \"Months\", y = \"Dollars owed\", \n       colour = \"Interest rate\") +\n  scale_colour_manual(values = c(met.brewer(\"VanGogh3\")[2], \n                               met.brewer(\"VanGogh3\")[6])) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 20)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 210)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 28))"
+  },
+  {
+    "objectID": "Masters_R_workshop.html#accumulate-use-cases",
+    "href": "Masters_R_workshop.html#accumulate-use-cases",
+    "title": "An introduction to coding in R",
+    "section": "accumulate() use cases",
+    "text": "accumulate() use cases\n\nImagine now that instead of money, you need to track the number of pterosaurs in a population. That population starts off with 400 individuals and decreases by 5% each year. Track the population for 25 years.\n\n\n\ntibble(year = 0:25,\n       pterosaurs = accumulate(1:25, .init = 400, ~ .x*0.95))\n\n\n\nNow consider migration. Each year, 10 individuals enter the population from a neighbouring source population.\n\n\n\ntibble(year = 0:25,\n       pterosaurs = accumulate(1:25, .init = 400, ~ (.x*0.95) + 10))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#goals",
+    "href": "Evo_theory_R_workshop_students.html#goals",
+    "title": "An introduction to coding in R",
+    "section": "Goals",
+    "text": "Goals\n\nSetup R to work as you intend\nCode in a reproducible, clear style\nGain a familiarity with key data wrangling functions\nBecome well versed in creating figures with ggplot\nCreate a document that should help you in the future"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#setting-up",
+    "href": "Evo_theory_R_workshop_students.html#setting-up",
+    "title": "An introduction to coding in R",
+    "section": "Setting up",
+    "text": "Setting up\nMake your interface look nice:\n\nTools &gt; global options\nLight or dark modes\nFira code: https://github.com/tonsky/FiraCode/wiki/RStudio-instructions"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#projects",
+    "href": "Evo_theory_R_workshop_students.html#projects",
+    "title": "An introduction to coding in R",
+    "section": "Projects",
+    "text": "Projects\nFile &gt; New project\n\nExisting directory: places project in an existing folder\nNew directory: creates new folder\nVersion control: handy if you want to use github\n\nProjects are powerful:\n\nR knows where to look for files\nNo need to worry about setting working directories\nGreat for sharing"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#quarto",
+    "href": "Evo_theory_R_workshop_students.html#quarto",
+    "title": "An introduction to coding in R",
+    "section": "Quarto",
+    "text": "Quarto\n\nOpen a quarto document in your new project\nFile &gt; New File &gt; Quarto document\nSave the document within the project directory (where you already are)\nSave the _quarto.yml provided in the email within this directory\nRender the document"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#packages",
+    "href": "Evo_theory_R_workshop_students.html#packages",
+    "title": "An introduction to coding in R",
+    "section": "Packages",
+    "text": "Packages\nThe base version of R can be upgraded with packages\nWe shall use the tidyverse collection of packages.\n\n#install.packages(\"tidyverse\")\n#install.packages(\"pander\")\n#install.packages(\"patchwork\")\n#install.packages(\"MetBrewer\")\n#install.packages(\"ggridges\")\n\nlibrary(tidyverse) # for tidy coding\nlibrary(tinytable) # for nice tables\nlibrary(patchwork) # for aligning plots\nlibrary(MetBrewer) # for nice colours to use when making figures\nlibrary(ggridges) # for nice density plots"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#the-tidyverse",
+    "href": "Evo_theory_R_workshop_students.html#the-tidyverse",
+    "title": "An introduction to coding in R",
+    "section": "The tidyverse",
+    "text": "The tidyverse\n\n\n\n\n\nA collection of packages\nAll follow the same logic\nQuite different from base R\n“Supremely readable”"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#rhamphorhynchus-muensteri",
+    "href": "Evo_theory_R_workshop_students.html#rhamphorhynchus-muensteri",
+    "title": "An introduction to coding in R",
+    "section": "Rhamphorhynchus muensteri",
+    "text": "Rhamphorhynchus muensteri\n\n\n\n\n\nA Bavarian pterosaur from the Jurassic\n140 different individuals have been found\nData from Habib and Hone 2024 PeerJ"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#the-dataset",
+    "href": "Evo_theory_R_workshop_students.html#the-dataset",
+    "title": "An introduction to coding in R",
+    "section": "The dataset",
+    "text": "The dataset\n\n1pterosaur_data &lt;-\n2  read_delim(\"pterosaur_data.csv\", delim = \";\")\n\n3pterosaur_data\n\n\n1\n\nAssign a name to the dataset\n\n2\n\nLoad the csv file and specify the separator between columns\n\n3\n\nDisplay the dataset\n\n\n\n\n\n\n# A tibble: 138 × 15\n   Individual_ID ORBIT SKULL  NECK TRUNK_LENGTH  TAIL HUMERUS RADIUS\n           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;\n 1             1  11      40  21.5         47.5  106.    16.5   26.7\n 2             2  10      35  18           NA    112     15.3   26  \n 3             3  NA      NA  NA           36     85     NA     NA  \n 4             4  NA      36  NA           39    115     17     28  \n 5             5  NA      NA  15.5         36.5  100     14.6   23.8\n 6             6  12      35  23           40    110     NA     NA  \n 7             7  10      35  20           41    106     15.5   24  \n 8             8  NA      31  NA           NA     NA     14.5   24  \n 9             9  NA      NA  17           36     79     NA     NA  \n10            10  12.5    41  23           47    125     19     32  \n# ℹ 128 more rows\n# ℹ 7 more variables: METACARPAL_4 &lt;dbl&gt;, WING_PHALANX_1 &lt;dbl&gt;,\n#   WING_PHALANX_2 &lt;dbl&gt;, WING_PHALANX_3 &lt;dbl&gt;, WING_PHALANX_4 &lt;dbl&gt;,\n#   FEMUR &lt;dbl&gt;, TIBIA &lt;dbl&gt;"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#rhamphorhynchus",
+    "href": "Evo_theory_R_workshop_students.html#rhamphorhynchus",
+    "title": "An introduction to coding in R",
+    "section": "Rhamphorhynchus",
+    "text": "Rhamphorhynchus"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#some-intriguing-patterns",
+    "href": "Evo_theory_R_workshop_students.html#some-intriguing-patterns",
+    "title": "An introduction to coding in R",
+    "section": "Some intriguing patterns",
+    "text": "Some intriguing patterns"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#the-key-to-tidyverse-coding",
+    "href": "Evo_theory_R_workshop_students.html#the-key-to-tidyverse-coding",
+    "title": "An introduction to coding in R",
+    "section": "The key to tidyverse coding: %>%",
+    "text": "The key to tidyverse coding: %&gt;%\nThis weird symbol is called a pipe\n\nYou should read this as then\ndo this, then do this…\nallows you to chain your code\n\n\n\npterosaur_data %&gt;% view()\n\nIn common language this means: load the pterosaur data then view it in a new tab"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#the-holy-trinity",
+    "href": "Evo_theory_R_workshop_students.html#the-holy-trinity",
+    "title": "An introduction to coding in R",
+    "section": "The holy trinity",
+    "text": "The holy trinity\n\nselect(): order, rename or drop columns\nfilter(): keep or remove specific rows\nmutate(): create new columns or edit existing ones\n\nIf you ever need help with a function, ? is your friend\n\n\n# An example of how to get some help\n?select"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#select",
+    "href": "Evo_theory_R_workshop_students.html#select",
+    "title": "An introduction to coding in R",
+    "section": "select()",
+    "text": "select()\nRemoving columns you aren’t interested in:\n\npterosaur_data %&gt;% select(Individual_ID, TAIL)\n\n1pterosaur_data %&gt;% select(!c(Individual_ID, TAIL))\n\n2pterosaur_data %&gt;% select(contains(\"WING\"))\n\n3pterosaur_data %&gt;% select(1, 5)\n\n\n1\n\nthe ! reverses the statement\n\n2\n\ncontains chooses columns with names that contain a pattern\n\n3\n\nDangerous coding! Avoid.\n\n\n\n\n\nChanging column names:\n\npterosaur_data %&gt;% select(Specimen = Individual_ID)\n\n# if you want to keep all other columns\n\npterosaur_data %&gt;% select(Specimen = Individual_ID, everything())\n\n# a recommended alternative\n\npterosaur_data %&gt;% rename(Specimen = Individual_ID)"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#select-use-cases",
+    "href": "Evo_theory_R_workshop_students.html#select-use-cases",
+    "title": "An introduction to coding in R",
+    "section": "select() use cases",
+    "text": "select() use cases\n\nCreate a new dataset that only contains the ID of the individual and wing measurements for phalanxs 2, 3 and 4.\nReturning to the original data, remove the measurements for wing phalanx 2 and 4\nWhy does this cause an error?\n\n\npterosaur_data %&gt;% select(contains(WING))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#filter",
+    "href": "Evo_theory_R_workshop_students.html#filter",
+    "title": "An introduction to coding in R",
+    "section": "filter()",
+    "text": "filter()\nChoosing rows of interest\n\nLarge_data &lt;- pterosaur_data %&gt;% filter(TAIL &gt; 200)\n\n1ten_cm_tails &lt;- pterosaur_data %&gt;% filter(TAIL == 100)\n\nlong_tails_and_small_heads &lt;- \n  pterosaur_data %&gt;% filter(TAIL &gt; 200 & SKULL &lt; 90)\n\nlong_tails_or_small_heads &lt;- \n2  pterosaur_data %&gt;% filter(TAIL &gt; 200 | SKULL &lt; 90)\n\n\n1\n\n== is needed to filter\n\n2\n\n| indicates or\n\n\n\n\n\nDealing with NA values\n\n# remove NAs in single column\npterosaur_data %&gt;% filter(!is.na(ORBIT))\n\n# remove all rows with NAs\npterosaur_data %&gt;% filter_at(vars(2:15), all_vars(!is.na(.)))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#filter-use-cases",
+    "href": "Evo_theory_R_workshop_students.html#filter-use-cases",
+    "title": "An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind pterosaurs that have longer necks than humerus’\nReturning to the original data, remove measurements with NA TRUNK_LENGTH values, for individuals with IDs greater than 50\nTrim the data to only include SKULL lengths between 60 and 90mm\nFind the individuals with the maximum and minimum tail lengths\nFind the individuals with tail lengths above the mean of the sampled population"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#filter-use-cases-1",
+    "href": "Evo_theory_R_workshop_students.html#filter-use-cases-1",
+    "title": "An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind the individuals with the maximum and minimum tail lengths\nFind the individuals with tail lengths above the mean of the sampled population"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#filter-handy-operators",
+    "href": "Evo_theory_R_workshop_students.html#filter-handy-operators",
+    "title": "An introduction to coding in R",
+    "section": "filter(): handy operators",
+    "text": "filter(): handy operators\n\n== = equal to\n& = and\n| = or\n! = does not\n&gt; = greater than\n&lt; = less than"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#mutate-modifying-existing-columns",
+    "href": "Evo_theory_R_workshop_students.html#mutate-modifying-existing-columns",
+    "title": "An introduction to coding in R",
+    "section": "mutate(): modifying existing columns",
+    "text": "mutate(): modifying existing columns\nLet’s change the units of measurement to centimetres\n\npterosaur_data_cm &lt;- pterosaur_data %&gt;% mutate(ORBIT = ORBIT/10)\n\n\nNow add 10cm to each orbit measurement (but don’t save this!)\n\npterosaur_data %&gt;% mutate(ORBIT = ORBIT + 10)"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#mutate-creating-new-columns",
+    "href": "Evo_theory_R_workshop_students.html#mutate-creating-new-columns",
+    "title": "An introduction to coding in R",
+    "section": "mutate(): creating new columns",
+    "text": "mutate(): creating new columns\nThe total length of a wing is roughly the sum of the lengths of the humerus, radius, fourth metacarpal and the four wing phalanxs. With mutate(), we can calculate this and add it to the dataset:\n\n\npterosaur_data &lt;-\n  pterosaur_data %&gt;% \n  mutate(single_wing_length = \n           HUMERUS + RADIUS + METACARPAL_4 + WING_PHALANX_1 + \n           WING_PHALANX_2 + WING_PHALANX_3 + WING_PHALANX_4) %&gt;% \n  select(Individual_ID, single_wing_length, everything())"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#conditional-mutation",
+    "href": "Evo_theory_R_workshop_students.html#conditional-mutation",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\nCan we place individuals into phenotypic classes?"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#conditional-mutation-1",
+    "href": "Evo_theory_R_workshop_students.html#conditional-mutation-1",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\npterosaur_data_classes &lt;-\n  pterosaur_data %&gt;% \n  mutate(Size_class = case_when(\n1    single_wing_length &lt; 300 ~ \"Small\",\n2    single_wing_length &gt;= 300 ~ \"Large\",\n3    .default = \"Unknown\"))\n\npterosaur_data_classes %&gt;% \n  select(Individual_ID, Size_class, single_wing_length)\n\n\n1\n\nFor this subset of cases…\n\n2\n\nFor a second subset of cases…\n\n3\n\nFor all remaining cases…\n\n\n\n\n\n\n# A tibble: 138 × 3\n   Individual_ID Size_class single_wing_length\n           &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;\n 1             1 Small                    183.\n 2             2 Small                    174.\n 3             3 Unknown                   NA \n 4             4 Small                    189.\n 5             5 Small                    166.\n 6             6 Unknown                   NA \n 7             7 Small                    164.\n 8             8 Unknown                   NA \n 9             9 Unknown                   NA \n10            10 Small                    221 \n# ℹ 128 more rows"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#conditional-mutation-2",
+    "href": "Evo_theory_R_workshop_students.html#conditional-mutation-2",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\nIt’s also possible to mutate a single row\n\npterosaur_data %&gt;% \n  mutate(Sex = case_when(Individual_ID == 1 ~ \"Special\",\n                         .default = \"Ordinary\"))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#build-your-phenotypic-classes",
+    "href": "Evo_theory_R_workshop_students.html#build-your-phenotypic-classes",
+    "title": "An introduction to coding in R",
+    "section": "Build your phenotypic classes",
+    "text": "Build your phenotypic classes\n\nNot every individual has a recorded wing length.\nBut there are other morphological traits in the dataset\nCreate a classification criteria and implement it"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#phenotypic-classes",
+    "href": "Evo_theory_R_workshop_students.html#phenotypic-classes",
+    "title": "An introduction to coding in R",
+    "section": "Phenotypic classes",
+    "text": "Phenotypic classes"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#bonus-content-summarise",
+    "href": "Evo_theory_R_workshop_students.html#bonus-content-summarise",
+    "title": "An introduction to coding in R",
+    "section": "Bonus content: summarise()",
+    "text": "Bonus content: summarise()\n\nThe logic of mutate() can be extended to summarise() row values\nRows can be grouped to summarise conditionally using the group_by function\n\n\n\npterosaur_data_classes %&gt;% \n  group_by(Size_class) %&gt;% \n1  summarise(\"Wing length\" = mean(single_wing_length, na.rm = T))\n\n\n1\n\nmean() has a built-in way to deal with NA values\n\n\n\n\n\n\n# A tibble: 3 × 2\n  Size_class `Wing length`\n  &lt;chr&gt;              &lt;dbl&gt;\n1 Large               490.\n2 Small               197.\n3 Unknown             NaN"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#your-task",
+    "href": "Evo_theory_R_workshop_students.html#your-task",
+    "title": "An introduction to coding in R",
+    "section": "Your task",
+    "text": "Your task\n\nSplit pterosaurs into phenotypic classes and remove those you can’t categorise\nTrim the dataframe to only include class, skull, length, wing length and tail length\nSummarise the data to show the mean for morphological traits, for each class\nConvert to cm and round to zero decimal places\n\nFocus on writing clear code, with comments (using the #) accompanying each important step.\nHint: the round() function can be used inside mutate()"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#table-making",
+    "href": "Evo_theory_R_workshop_students.html#table-making",
+    "title": "An introduction to coding in R",
+    "section": "Table making",
+    "text": "Table making\nOnce complete, pass your polished dataframe to this function with the %&gt;% to make a neat table\n\n# your dataframe goes here %&gt;% \n1 tt()\n\n\n1\n\nSee ?tinytable::tt"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#expanding-our-vocabulary",
+    "href": "Evo_theory_R_workshop_students.html#expanding-our-vocabulary",
+    "title": "An introduction to coding in R",
+    "section": "Expanding our vocabulary",
+    "text": "Expanding our vocabulary\n\ndistinct()\nslice() and slice_sample()\nn()\nbind_rows()"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#the-tidyverse-for-loop",
+    "href": "Evo_theory_R_workshop_students.html#the-tidyverse-for-loop",
+    "title": "An introduction to coding in R",
+    "section": "The tidyverse ‘for loop’",
+    "text": "The tidyverse ‘for loop’\nIn the tidyverse, the accumulate() function replaces the for loop. Here’s how it works\n\nSay we want to work out debt accumulated on a loan over a 6 month period\nThe monthly interest rate is 10%, or if you’re unlucky 20%\n\n\n\ntibble(month = 1:6,\n       debt_10 = accumulate(1:5, .init = 100, ~ .x*1.1),  \n       debt_20 = accumulate(1:5, .init = 100, ~ .x*1.2)) \n\n\n~ .x * 1.1 adds 10% to each element, starting from the initial value 100"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#accumulate-use-cases",
+    "href": "Evo_theory_R_workshop_students.html#accumulate-use-cases",
+    "title": "An introduction to coding in R",
+    "section": "accumulate() use cases",
+    "text": "accumulate() use cases\n\nImagine now that instead of money, you need to track the number of pterosaurs in a population. That population starts off with 400 individuals and decreases by 5% each year. Track the population for 25 years.\nNow consider migration. Each year, 10 individuals enter the population from a neighbouring source population."
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#visualising-data",
+    "href": "Evo_theory_R_workshop_students.html#visualising-data",
+    "title": "An introduction to coding in R",
+    "section": "Visualising data",
+    "text": "Visualising data\n\nAt its core, science communication is most effective through visual mediums\nThe ggplot2 package is included in the tidyverse"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#ggplot",
+    "href": "Evo_theory_R_workshop_students.html#ggplot",
+    "title": "An introduction to coding in R",
+    "section": "ggplot()",
+    "text": "ggplot()\n\nBuild plots one layer at a time\nLayers are added on top of one another\nNew layers are added with the + symbol\n+ == %&gt;% in ggplot-land\n\n\nGetting started\n\npterosaur_data_classes %&gt;% \n  ggplot(aes())\n\n\nggplot() provides an empty canvas\naes determines how variables are mapped to visual aesthetics"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#building-a-geom_histogram",
+    "href": "Evo_theory_R_workshop_students.html#building-a-geom_histogram",
+    "title": "An introduction to coding in R",
+    "section": "Building a geom_histogram()",
+    "text": "Building a geom_histogram()\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1)"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#fix-the-labels",
+    "href": "Evo_theory_R_workshop_students.html#fix-the-labels",
+    "title": "An introduction to coding in R",
+    "section": "Fix the labels",
+    "text": "Fix the labels\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\")"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#fix-the-theming",
+    "href": "Evo_theory_R_workshop_students.html#fix-the-theming",
+    "title": "An introduction to coding in R",
+    "section": "Fix the theming",
+    "text": "Fix the theming\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  theme_classic() + # new\n  theme(panel.grid.major = element_line(), # new\n        text = element_text(size= 14)) # new"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#fix-the-axis",
+    "href": "Evo_theory_R_workshop_students.html#fix-the-axis",
+    "title": "An introduction to coding in R",
+    "section": "Fix the axis",
+    "text": "Fix the axis\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_x_continuous(expand = c(0, 0), # new\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0), # new\n                     limits = c(0, 20.0)) + # new\n  scale_y_continuous(expand = c(0, 0)) + # new\n  theme_classic() + \n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#change-the-colours",
+    "href": "Evo_theory_R_workshop_students.html#change-the-colours",
+    "title": "An introduction to coding in R",
+    "section": "Change the colours",
+    "text": "Change the colours\nCheck out met.brewer\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_x_continuous(expand = c(0, 0),\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),\n                     limits = c(0, 20.0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) + # new\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#change-to-geom_density",
+    "href": "Evo_theory_R_workshop_students.html#change-to-geom_density",
+    "title": "An introduction to coding in R",
+    "section": "Change to geom_density()",
+    "text": "Change to geom_density()\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) + \n  geom_density(colour = NA, alpha = 0.7) + # new\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) +\n  scale_x_continuous(expand = c(0, 0),\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),\n                     limits = c(0, 20.0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#the-scatterplot-geom_point",
+    "href": "Evo_theory_R_workshop_students.html#the-scatterplot-geom_point",
+    "title": "An introduction to coding in R",
+    "section": "The scatterplot: geom_point()",
+    "text": "The scatterplot: geom_point()\n\npterosaur_data_classes %&gt;%\n  ggplot(aes(x = ORBIT, y = WING_PHALANX_1)) +\n  geom_point()"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#make-improvements",
+    "href": "Evo_theory_R_workshop_students.html#make-improvements",
+    "title": "An introduction to coding in R",
+    "section": "Make improvements",
+    "text": "Make improvements\n\npterosaur_data_classes %&gt;%\n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point() +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\") +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#geom_point",
+    "href": "Evo_theory_R_workshop_students.html#geom_point",
+    "title": "An introduction to coding in R",
+    "section": "geom_point()",
+    "text": "geom_point()\n\npterosaur_data_classes %&gt;% filter(Size_class != \"Unknown\") %&gt;% \n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point(aes(fill = Size_class), shape = 21, size = 5, alpha = 0.8, \n             colour = \"black\") +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\", \n       fill = \"Size class\") +\n  scale_fill_manual(values = c(met.brewer(\"Hiroshige\")[4], \n                               met.brewer(\"Hiroshige\")[6])) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#continuous-vs-discrete-colours",
+    "href": "Evo_theory_R_workshop_students.html#continuous-vs-discrete-colours",
+    "title": "An introduction to coding in R",
+    "section": "Continuous vs discrete colours",
+    "text": "Continuous vs discrete colours\n\npterosaur_data_classes %&gt;% filter(Size_class != \"Unknown\") %&gt;% \n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point(aes(fill = ORBIT/10), shape = 21, size = 5, alpha = 0.9, \n             colour = \"black\") +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\", \n       fill = \"Orbit\\nlength\") +\n  scale_fill_gradientn(colors=met.brewer(\"Hiroshige\", direction = -1)) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#line-plots",
+    "href": "Evo_theory_R_workshop_students.html#line-plots",
+    "title": "An introduction to coding in R",
+    "section": "Line plots",
+    "text": "Line plots\nLet’s return to our crippling interest rates\n\nline_plot &lt;-\n  tibble(month = 0:20,\n       `10%` = accumulate(1:20, .init = 5, ~ .x*1.1),  \n       `20%` = accumulate(1:20, .init = 5, ~ .x*1.2)) %&gt;% \n  pivot_longer(2:3, names_to = \"Interest_rate\", values_to = \"Amount_owed\") %&gt;% \n  # plot\n  ggplot(aes(x = month, y = Amount_owed, \n             group = Interest_rate, colour = Interest_rate)) +\n    geom_line(linewidth = 2)\n\nline_plot"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#make-it-beautiful",
+    "href": "Evo_theory_R_workshop_students.html#make-it-beautiful",
+    "title": "An introduction to coding in R",
+    "section": "Make it beautiful",
+    "text": "Make it beautiful\n\nline_plot +\n  labs(x = \"Months\", y = \"Dollars owed\", \n       colour = \"Interest rate\") +\n  scale_colour_manual(values = c(met.brewer(\"VanGogh3\")[2], \n                               met.brewer(\"VanGogh3\")[6])) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 20)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 210)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 28))"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#general-tips",
+    "href": "Evo_theory_R_workshop_students.html#general-tips",
+    "title": "An introduction to coding in R",
+    "section": "General tips",
+    "text": "General tips\n\nalpha: changes the transparency\nfill: colours the inside of elements\ncolour: colours the outlines of elements\n\nIf you want these to change with your data, place them inside aes()\nMany more plot styles can be found here"
+  },
+  {
+    "objectID": "Evo_theory_R_workshop_students.html#the-power-of-quarto",
+    "href": "Evo_theory_R_workshop_students.html#the-power-of-quarto",
+    "title": "An introduction to coding in R",
+    "section": "The power of Quarto",
+    "text": "The power of Quarto\nTom’s supplementary material\n\n\n\n\nEvolutionary Theory: R workshop"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#goals",
+    "href": "tidyverse_lecture_1.html#goals",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Goals",
+    "text": "Goals\n\nSetup R to work as you intend\nCode in a reproducible, clear style\nGain a familiarity with key data wrangling functions\nBecome well versed in creating figures with ggplot\nCreate a document that should help you in the future"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#installation",
+    "href": "tidyverse_lecture_1.html#installation",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Installation",
+    "text": "Installation\nWe will run R using quarto documents in R studio\nDownload the latest versions:\n\nR: https://cran.r-project.org/\nR studio: https://posit.co/downloads/\n\nQuarto: turns R into a text editor\n\nCode is written in specified code chunks\nNotes can be written outside code chunks without #\nYour code can be turned into an elegant report"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#setting-up",
+    "href": "tidyverse_lecture_1.html#setting-up",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Setting up",
+    "text": "Setting up\nMake your interface look nice:\n\nTools &gt; global options\nLight or dark modes\nFira code: https://github.com/tonsky/FiraCode/wiki/RStudio-instructions"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#projects",
+    "href": "tidyverse_lecture_1.html#projects",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Projects",
+    "text": "Projects\nFile &gt; New project\n\nExisting directory: places project in an existing folder\nNew directory: creates new folder\nVersion control: handy if you want to use github\n\nProjects are powerful:\n\nR knows where to look for files\nNo need to worry about setting working directories\nGreat for sharing"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#quarto",
+    "href": "tidyverse_lecture_1.html#quarto",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Quarto",
+    "text": "Quarto\n\nOpen a quarto document in your new project\nFile &gt; New File &gt; Quarto document\nSave the document within the project directory (where you already are)\nSave the _quarto.yml provided in the email within this directory\nRender the document"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#packages",
+    "href": "tidyverse_lecture_1.html#packages",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Packages",
+    "text": "Packages\nThe base version of R can be upgraded with packages\nWe shall use the tidyverse collection of packages.\n\n#install.packages(\"tidyverse\")\n#install.packages(\"pander\")\n#install.packages(\"patchwork\")\n#install.packages(\"MetBrewer\")\n\nlibrary(tidyverse) # for tidy coding\nlibrary(pander) # for nice tables\nlibrary(patchwork) # for aligning plots\nlibrary(MetBrewer) # for nice colours to use when making figures"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#the-tidyverse",
+    "href": "tidyverse_lecture_1.html#the-tidyverse",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "The tidyverse",
+    "text": "The tidyverse\n\n\n\n\n\nA collection of packages\nAll follow the same logic\nQuite different from base R\n“Supremely readable”"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#rhamphorhynchus-muensteri",
+    "href": "tidyverse_lecture_1.html#rhamphorhynchus-muensteri",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Rhamphorhynchus muensteri",
+    "text": "Rhamphorhynchus muensteri\n\n\n\n\n\nA Bavarian pterosaur from the Jurassic\n140 different individuals have been found\nData from Habib and Hone 2024 PeerJ"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#the-dataset",
+    "href": "tidyverse_lecture_1.html#the-dataset",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "The dataset",
+    "text": "The dataset\n\n1pterosaur_data &lt;-\n2  read_delim(\"pterosaur_data.csv\", delim = \";\")\n\n3pterosaur_data\n\n\n1\n\nAssign a name to the dataset\n\n2\n\nLoad the csv file and specify the separator between columns\n\n3\n\nDisplay the dataset\n\n\n\n\n\n\n# A tibble: 138 × 15\n   Individual_ID ORBIT SKULL  NECK TRUNK_LENGTH  TAIL HUMERUS RADIUS\n           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;\n 1             1  11      40  21.5         47.5  106.    16.5   26.7\n 2             2  10      35  18           NA    112     15.3   26  \n 3             3  NA      NA  NA           36     85     NA     NA  \n 4             4  NA      36  NA           39    115     17     28  \n 5             5  NA      NA  15.5         36.5  100     14.6   23.8\n 6             6  12      35  23           40    110     NA     NA  \n 7             7  10      35  20           41    106     15.5   24  \n 8             8  NA      31  NA           NA     NA     14.5   24  \n 9             9  NA      NA  17           36     79     NA     NA  \n10            10  12.5    41  23           47    125     19     32  \n# ℹ 128 more rows\n# ℹ 7 more variables: METACARPAL_4 &lt;dbl&gt;, WING_PHALANX_1 &lt;dbl&gt;,\n#   WING_PHALANX_2 &lt;dbl&gt;, WING_PHALANX_3 &lt;dbl&gt;, WING_PHALANX_4 &lt;dbl&gt;,\n#   FEMUR &lt;dbl&gt;, TIBIA &lt;dbl&gt;"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#rhamphorhynchus",
+    "href": "tidyverse_lecture_1.html#rhamphorhynchus",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Rhamphorhynchus",
+    "text": "Rhamphorhynchus"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#some-intriguing-patterns",
+    "href": "tidyverse_lecture_1.html#some-intriguing-patterns",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Some intriguing patterns",
+    "text": "Some intriguing patterns"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#the-key-to-tidyverse-coding",
+    "href": "tidyverse_lecture_1.html#the-key-to-tidyverse-coding",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "The key to tidyverse coding: %>%",
+    "text": "The key to tidyverse coding: %&gt;%\nThis weird symbol is called a pipe\n\nYou should read this as then\ndo this, then do this…\nallows you to chain your code\n\n\n\npterosaur_data %&gt;% view()\n\nIn english this means: load the pterosaur data then view it in a new tab"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#the-holy-trinity",
+    "href": "tidyverse_lecture_1.html#the-holy-trinity",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "The holy trinity",
+    "text": "The holy trinity\n\nselect(): order, rename or drop columns\nfilter(): keep or remove specific rows\nmutate(): create new columns or edit existing ones\n\nIf you ever need help with a function, ? is your friend\n\n\n# An example of how to get some help\n?select"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#select",
+    "href": "tidyverse_lecture_1.html#select",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "select()",
+    "text": "select()\nRemoving columns you aren’t interested in:\n\npterosaur_data %&gt;% select(Individual_ID, TAIL)\n\n1pterosaur_data %&gt;% select(!c(Individual_ID, TAIL))\n\n2pterosaur_data %&gt;% select(contains(\"WING\"))\n\n3pterosaur_data %&gt;% select(1, 5)\n\n\n1\n\nthe ! reverses the statement\n\n2\n\ncontains chooses columns with names that contain a pattern\n\n3\n\nDangerous coding! Avoid.\n\n\n\n\n\nChanging column names:\n\npterosaur_data %&gt;% select(Specimen = Individual_ID)\n\n# if you want to keep all other columns\n\npterosaur_data %&gt;% select(Specimen = Individual_ID, everything())\n\n# a recommended alternative\n\npterosaur_data %&gt;% rename(Specimen = Individual_ID)"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#select-use-cases",
+    "href": "tidyverse_lecture_1.html#select-use-cases",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "select() use cases",
+    "text": "select() use cases\n\nCreate a new dataset that only contains the ID of the individual and wing measurements for phalanxs 2, 3 and 4.\n\n\n\npterosaur_subset &lt;-\n  pterosaur_data %&gt;% \n  select(Individual_ID, num_range(\"WING_PHALANX_\", 2:4)) \n\n\n\nReturning to the original data, remove the measurements for wing phalanx 2 and 4\n\n\n\npterosaur_subset_2 &lt;-\n  pterosaur_data %&gt;% \n  select(!c(WING_PHALANX_2, WING_PHALANX_4)) \n\n\n\nWhy does this cause an error?\n\n\npterosaur_data %&gt;% select(contains(WING))"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#filter",
+    "href": "tidyverse_lecture_1.html#filter",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "filter()",
+    "text": "filter()\nChoosing rows of interest\n\nLarge_data &lt;- pterosaur_data %&gt;% filter(TAIL &gt; 200)\n\n1ten_cm_tails &lt;- pterosaur_data %&gt;% filter(TAIL == 100)\n\nlong_tails_and_small_heads &lt;- \n  pterosaur_data %&gt;% filter(TAIL &gt; 200 & SKULL &lt; 90)\n\nlong_tails_or_small_heads &lt;- \n2  pterosaur_data %&gt;% filter(TAIL &gt; 200 | SKULL &lt; 90)\n\n\n1\n\n== is needed to filter\n\n2\n\n| indicates or\n\n\n\n\n\nDealing with NA values\n\n# remove NAs in single column\npterosaur_data %&gt;% filter(!is.na(ORBIT))\n\n# remove all rows with NAs\npterosaur_data %&gt;% filter_at(vars(2:15), all_vars(!is.na(.)))"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#filter-use-cases",
+    "href": "tidyverse_lecture_1.html#filter-use-cases",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind pterosaurs that have longer necks than humerus’\n\n\n\nnecks_longer_than_forearms &lt;- pterosaur_data %&gt;% filter(NECK &gt; HUMERUS) \n\n\n\nReturning to the original data, remove measurements with NA TRUNK_LENGTH values, for individuals with IDs greater than 50\n\n\n\npterosaur_data %&gt;% \n  filter(!is.na(TRUNK_LENGTH) & Individual_ID &gt; 50) \n\n\n\nTrim the data to only include SKULL lengths between 60 and 90mm\n\n\n\nmedium_skulls &lt;- pterosaur_data %&gt;% filter(SKULL &lt;= 90 & SKULL &gt;= 60)"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#filter-use-cases-1",
+    "href": "tidyverse_lecture_1.html#filter-use-cases-1",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind the individuals with the maximum and minimum tail lengths\n\n\n\npterosaur_data %&gt;%\n  filter(!is.na(TAIL)) %&gt;% \n  filter(TAIL == max(TAIL) |\n           TAIL == min(TAIL)) \n\n\n\nFind the individuals with tail lengths above the mean of the sampled population\n\n\n\npterosaur_data %&gt;% \n  filter(!is.na(TAIL)) %&gt;% \n  filter(TAIL &gt; mean(TAIL))"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#mutate-modifying-existing-columns",
+    "href": "tidyverse_lecture_1.html#mutate-modifying-existing-columns",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "mutate(): modifying existing columns",
+    "text": "mutate(): modifying existing columns\nLet’s change the units of measurement to centimetres\n\npterosaur_data_cm &lt;- pterosaur_data %&gt;% mutate(ORBIT = ORBIT/10)\n\n\nNow add 10cm to each orbit measurement (but don’t save this!)\n\npterosaur_data %&gt;% mutate(ORBIT = ORBIT + 10)"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#mutate-creating-new-columns",
+    "href": "tidyverse_lecture_1.html#mutate-creating-new-columns",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "mutate(): creating new columns",
+    "text": "mutate(): creating new columns\nThe total length of a wing is roughly the sum of the lengths of the humerus, radius, fourth metacarpal and the four wing phalanxs. With mutate(), we can calculate this and add it to the dataset:\n\n\npterosaur_data &lt;-\n  pterosaur_data %&gt;% \n  mutate(single_wing_length = \n           HUMERUS + RADIUS + METACARPAL_4 + WING_PHALANX_1 + \n           WING_PHALANX_2 + WING_PHALANX_3 + WING_PHALANX_4) %&gt;% \n  select(Individual_ID, single_wing_length, everything())"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#conditional-mutation",
+    "href": "tidyverse_lecture_1.html#conditional-mutation",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\nCan we place individuals into phenotypic classes?"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#conditional-mutation-1",
+    "href": "tidyverse_lecture_1.html#conditional-mutation-1",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\npterosaur_data_age_structured &lt;-\n  pterosaur_data %&gt;% \n  mutate(Phenotypic_class = case_when(\n1    single_wing_length &lt; 300 ~ \"Small\",\n2    single_wing_length &gt;= 300 ~ \"Large\",\n3    .default = \"Unknown\"))\n\npterosaur_data_age_structured %&gt;% \n  select(Individual_ID, Phenotypic_class, single_wing_length)\n\n\n1\n\nFor this subset of cases…\n\n2\n\nFor a second subset of cases…\n\n3\n\nFor all remaining cases…\n\n\n\n\n\n\n# A tibble: 138 × 3\n   Individual_ID Phenotypic_class single_wing_length\n           &lt;dbl&gt; &lt;chr&gt;                         &lt;dbl&gt;\n 1             1 Small                          183.\n 2             2 Small                          174.\n 3             3 Unknown                         NA \n 4             4 Small                          189.\n 5             5 Small                          166.\n 6             6 Unknown                         NA \n 7             7 Small                          164.\n 8             8 Unknown                         NA \n 9             9 Unknown                         NA \n10            10 Small                          221 \n# ℹ 128 more rows"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#conditional-mutation-2",
+    "href": "tidyverse_lecture_1.html#conditional-mutation-2",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\nIt’s also possible to mutate a single row\n\npterosaur_data %&gt;% \n  mutate(Sex = case_when(Individual_ID == 1 ~ \"Special\",\n                         .default = \"Ordinary\"))"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#build-your-phenotypic-classes",
+    "href": "tidyverse_lecture_1.html#build-your-phenotypic-classes",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Build your phenotypic classes",
+    "text": "Build your phenotypic classes\n\nNot every individual has a recorded wing length.\nBut there are other morphological traits in the dataset\nCreate a classification criteria and implement it"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#phenotypic-classes",
+    "href": "tidyverse_lecture_1.html#phenotypic-classes",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Phenotypic classes",
+    "text": "Phenotypic classes\n\npterosaur_data_age_structured &lt;-\n  pterosaur_data %&gt;% \n  mutate(Phenotypic_class = case_when(single_wing_length &lt; 300 ~ \"Small\", \n                               single_wing_length &gt;= 300 ~ \"Large\", \n                               WING_PHALANX_1 &lt; 80 ~ \"Small\",\n                               WING_PHALANX_1 &gt;= 80 ~ \"Large\",\n                               FEMUR &lt; 20 ~ \"Small\",\n                               FEMUR &gt;= 20 ~ \"Large\",\n                               TAIL &lt; 150 ~ \"Small\",\n                               TAIL &gt;= 200 ~ \"Large\",\n                               SKULL &lt; 80 ~ \"Small\",\n                               SKULL &gt;= 100 ~ \"Large\",\n                               HUMERUS &lt; 25 ~ \"Small\",\n                               HUMERUS &gt;= 30 ~ \"Large\",\n                               SKULL &lt; 90 ~ \"Small\",\n                               SKULL &gt;= 90 ~ \"Large\",\n                               .default = \"Unknown\")) %&gt;% \n  select(Individual_ID, Phenotypic_class, everything())"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#bonus-content-summarise",
+    "href": "tidyverse_lecture_1.html#bonus-content-summarise",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Bonus content: summarise()",
+    "text": "Bonus content: summarise()\n\nThe logic of mutate() can be extended to summarise() row values\nRows can be grouped to summarise conditionally using the group_by function\n\n\n\npterosaur_data_age_structured %&gt;% \n  group_by(Phenotypic_class) %&gt;% \n1  summarise(\"Wing length\" = mean(single_wing_length, na.rm = T))\n\n\n1\n\nmean() has a built-in way to deal with NA values\n\n\n\n\n\n\n# A tibble: 3 × 2\n  Phenotypic_class `Wing length`\n  &lt;chr&gt;                    &lt;dbl&gt;\n1 Large                     490.\n2 Small                     197.\n3 Unknown                   NaN"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#your-task",
+    "href": "tidyverse_lecture_1.html#your-task",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Your task",
+    "text": "Your task\n\nSplit pterosaurs into phenotypic classes and remove those you can’t categorise\nTrim the dataframe to only include class, skull, length, wing length and tail length\nSummarise the data to show the mean for morphological traits, for each class\nConvert to cm and round to zero decimal places\n\nFocus on writing clear code, with comments (using the #) accompanying each important step.\nHint: the round() function can be used inside mutate()"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#table-making",
+    "href": "tidyverse_lecture_1.html#table-making",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Table making",
+    "text": "Table making\nOnce complete, pass your polished dataframe to this function with the %&gt;% to make a neat table\n\n# your dataframe goes here %&gt;% \n1 pander(split.cell = 20, split.table = Inf)\n\n\n1\n\nSee ?pander"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#expanding-our-vocabulary",
+    "href": "tidyverse_lecture_1.html#expanding-our-vocabulary",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Expanding our vocabulary",
+    "text": "Expanding our vocabulary\n\ndistinct()\nslice()\nn()\nbind_rows()"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#joins",
+    "href": "tidyverse_lecture_1.html#joins",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\nWhat if we have two separate dataframes that we want to merge?\n\nfive_random_pterosaurs &lt;- pterosaur_data %&gt;% \n  filter_at(vars(2:15), all_vars(!is.na(.)))  %&gt;% \n  slice_sample(n = 8)\n\neye_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, ORBIT) %&gt;% \n  arrange(Individual_ID)\n\ntail_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, TAIL) %&gt;% \n  arrange(Individual_ID)"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#joins-1",
+    "href": "tidyverse_lecture_1.html#joins-1",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\n\n\n\neye_stats\n\n# A tibble: 5 × 2\n  Individual_ID ORBIT\n          &lt;dbl&gt; &lt;dbl&gt;\n1             7    10\n2            26    15\n3            29    13\n4            43    20\n5            77    27\n\n\n\n\ntail_stats\n\n# A tibble: 5 × 2\n  Individual_ID  TAIL\n          &lt;dbl&gt; &lt;dbl&gt;\n1             1  106.\n2             7  106 \n3            29  148 \n4            76  343 \n5            77  340 \n\n\n\nFor joins to work, there needs to be some common element that links the two dataframes"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#left_join",
+    "href": "tidyverse_lecture_1.html#left_join",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "left_join()",
+    "text": "left_join()\n\nAdd columns from dataframe y to dataframe x\nThe comment element is the Individual_ID\nKeep all observations in x\n\n\n\n\neye_stats %&gt;% \n  left_join(tail_stats)\n\n# A tibble: 5 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             7    10   106\n2            26    15    NA\n3            29    13   148\n4            43    20    NA\n5            77    27   340\n\n\n\n\ntail_stats %&gt;% \n  left_join(eye_stats)\n\n# A tibble: 5 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             1  106.    NA\n2             7  106     10\n3            29  148     13\n4            76  343     NA\n5            77  340     27"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#inner_join",
+    "href": "tidyverse_lecture_1.html#inner_join",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "inner_join()",
+    "text": "inner_join()\n\nOnly keep rows in x that have a matching common element in y\n\n\n\n\neye_stats %&gt;% \n  inner_join(tail_stats)\n\n# A tibble: 3 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             7    10   106\n2            29    13   148\n3            77    27   340\n\n\n\n\ntail_stats %&gt;% \n  inner_join(eye_stats)\n\n# A tibble: 3 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             7   106    10\n2            29   148    13\n3            77   340    27"
+  },
+  {
+    "objectID": "tidyverse_lecture_1.html#build-a-quarto-report",
+    "href": "tidyverse_lecture_1.html#build-a-quarto-report",
+    "title": "Workshop 1: An introduction to coding in R",
+    "section": "Build a quarto report",
+    "text": "Build a quarto report\n\nUse quarto to publish a report, documenting your code\nUse this time to tidy your code\nUse comments within code chunks\nWrite explanations outside of code chunks\nSee the _quarto.yml file"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#recapping-yesterday",
+    "href": "tidyverse_lecture_2.html#recapping-yesterday",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Recapping yesterday",
+    "text": "Recapping yesterday\nThe Holy trinity:\n\nselect()\nfilter()\nmutate()"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#build-your-phenotypic-classes",
+    "href": "tidyverse_lecture_2.html#build-your-phenotypic-classes",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Build your phenotypic classes",
+    "text": "Build your phenotypic classes\n\nNot every individual has a recorded wing length.\nBut there are other morphological traits in the dataset\nCreate a classification criteria and implement it"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#phenotypic-classes",
+    "href": "tidyverse_lecture_2.html#phenotypic-classes",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Phenotypic classes",
+    "text": "Phenotypic classes\n\npterosaur_data_classes &lt;-\n  pterosaur_data %&gt;% \n  mutate(single_wing_length = \n           HUMERUS + RADIUS + METACARPAL_4 + WING_PHALANX_1 + \n           WING_PHALANX_2 + WING_PHALANX_3 + WING_PHALANX_4) %&gt;% \n  mutate(Size_class = case_when(single_wing_length &lt; 300 ~ \"Small\", \n                               single_wing_length &gt;= 300 ~ \"Large\", \n                               WING_PHALANX_1 &lt; 80 ~ \"Small\",\n                               WING_PHALANX_1 &gt;= 80 ~ \"Large\",\n                               FEMUR &lt; 20 ~ \"Small\",\n                               FEMUR &gt;= 20 ~ \"Large\",\n                               TAIL &lt; 150 ~ \"Small\",\n                               TAIL &gt;= 200 ~ \"Large\",\n                               SKULL &lt; 80 ~ \"Small\",\n                               SKULL &gt;= 100 ~ \"Large\",\n                               HUMERUS &lt; 25 ~ \"Small\",\n                               HUMERUS &gt;= 30 ~ \"Large\",\n                               SKULL &lt; 90 ~ \"Small\",\n                               SKULL &gt;= 90 ~ \"Large\",\n                               .default = \"Unknown\")) %&gt;% \n  select(Individual_ID, Size_class, single_wing_length, everything())"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#bonus-content-summarise",
+    "href": "tidyverse_lecture_2.html#bonus-content-summarise",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Bonus content: summarise()",
+    "text": "Bonus content: summarise()\n\nThe logic of mutate() can be extended to summarise() row values\nRows can be grouped to summarise conditionally using the group_by function\n\n\n\npterosaur_data_classes %&gt;% \n  group_by(Size_class) %&gt;% \n1  summarise(\"Wing length\" = mean(single_wing_length, na.rm = T))\n\n\n1\n\nmean() has a built-in way to deal with NA values\n\n\n\n\n\n\n# A tibble: 3 × 2\n  Size_class `Wing length`\n  &lt;chr&gt;              &lt;dbl&gt;\n1 Large               490.\n2 Small               197.\n3 Unknown             NaN"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#expanding-our-vocabulary",
+    "href": "tidyverse_lecture_2.html#expanding-our-vocabulary",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Expanding our vocabulary",
+    "text": "Expanding our vocabulary\n\npivot_longer()\nslice_sample()\nn()"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#your-task",
+    "href": "tidyverse_lecture_2.html#your-task",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Your task",
+    "text": "Your task\n\nSplit pterosaurs into phenotypic classes and remove those you can’t categorise\nTrim the dataframe to only include the relevant measures\nSummarise the data to show the mean for your chosen morphological traits, for each class\nConvert to cm and round to zero decimal places\n\nFocus on writing clear code, with comments (using the #) accompanying each important step.\nHint: the round() function can be used inside mutate()"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#table-making",
+    "href": "tidyverse_lecture_2.html#table-making",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Table making",
+    "text": "Table making\nOnce complete, pass your polished dataframe to this function with the %&gt;% to make a neat table\n\n# your dataframe goes here %&gt;% \n1 pander(split.cell = 20, split.table = Inf)\n\n\n1\n\nSee ?pander"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#joins",
+    "href": "tidyverse_lecture_2.html#joins",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\nWhat if we have two separate dataframes that we want to merge?\n\nfive_random_pterosaurs &lt;- pterosaur_data_classes %&gt;% \n  filter_at(vars(ORBIT, TAIL), all_vars(!is.na(.)))  %&gt;% \n  slice_sample(n = 8)\n\neye_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, ORBIT) %&gt;% \n  arrange(Individual_ID)\n\ntail_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, TAIL) %&gt;% \n  arrange(Individual_ID)"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#joins-1",
+    "href": "tidyverse_lecture_2.html#joins-1",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\n\n\n\neye_stats\n\n# A tibble: 5 × 2\n  Individual_ID ORBIT\n          &lt;dbl&gt; &lt;dbl&gt;\n1            11    12\n2            24    14\n3            44    23\n4            67    21\n5           118    18\n\n\n\n\ntail_stats\n\n# A tibble: 5 × 2\n  Individual_ID  TAIL\n          &lt;dbl&gt; &lt;dbl&gt;\n1            26   163\n2            44   277\n3            67   262\n4           118   259\n5           136   350\n\n\n\nFor joins to work, there needs to be some common element that links the two dataframes"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#left_join",
+    "href": "tidyverse_lecture_2.html#left_join",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "left_join()",
+    "text": "left_join()\n\nAdd columns from dataframe y to dataframe x\nThe comment element is the Individual_ID\nKeep all observations in x\n\n\n\n\neye_stats %&gt;% \n  left_join(tail_stats)\n\n# A tibble: 5 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            11    12    NA\n2            24    14    NA\n3            44    23   277\n4            67    21   262\n5           118    18   259\n\n\n\n\ntail_stats %&gt;% \n  left_join(eye_stats)\n\n# A tibble: 5 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            26   163    NA\n2            44   277    23\n3            67   262    21\n4           118   259    18\n5           136   350    NA"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#inner_join",
+    "href": "tidyverse_lecture_2.html#inner_join",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "inner_join()",
+    "text": "inner_join()\n\nOnly keep rows in x that have a matching common element in y\n\n\n\n\neye_stats %&gt;% \n  inner_join(tail_stats)\n\n# A tibble: 3 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            44    23   277\n2            67    21   262\n3           118    18   259\n\n\n\n\ntail_stats %&gt;% \n  inner_join(eye_stats)\n\n# A tibble: 3 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1            44   277    23\n2            67   262    21\n3           118   259    18"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#visualising-data",
+    "href": "tidyverse_lecture_2.html#visualising-data",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Visualising data",
+    "text": "Visualising data\n\nAt its core, science communication is most effective through visual mediums\nThe ggplot2 package is included in the tidyverse"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#ggplot",
+    "href": "tidyverse_lecture_2.html#ggplot",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "ggplot()",
+    "text": "ggplot()\n\nBuild plots one layer at a time\nLayers are added on top of one another\nNew layers are added with the + symbol\n+ == %&gt;% in ggplot-land\n\n\nGetting started\n\npterosaur_data_classes %&gt;% \n  ggplot(aes())\n\n\nggplot() provides an empty canvas\naes determines how variables are mapped to visual aesthetics"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#building-a-geom_histogram",
+    "href": "tidyverse_lecture_2.html#building-a-geom_histogram",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Building a geom_histogram()",
+    "text": "Building a geom_histogram()\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1)"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#fix-the-labels",
+    "href": "tidyverse_lecture_2.html#fix-the-labels",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Fix the labels",
+    "text": "Fix the labels\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\")"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#fix-the-theming",
+    "href": "tidyverse_lecture_2.html#fix-the-theming",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Fix the theming",
+    "text": "Fix the theming\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  theme_classic() + # new\n  theme(panel.grid.major = element_line(), # new\n        text = element_text(size= 14)) # new"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#fix-the-axis",
+    "href": "tidyverse_lecture_2.html#fix-the-axis",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Fix the axis",
+    "text": "Fix the axis\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_x_continuous(expand = c(0, 0), # new\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0), # new\n                     limits = c(0, 20.0)) + # new\n  scale_y_continuous(expand = c(0, 0)) + # new\n  theme_classic() + \n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#change-the-colours",
+    "href": "tidyverse_lecture_2.html#change-the-colours",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Change the colours",
+    "text": "Change the colours\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) +\n  geom_histogram(binwidth = 0.1) +\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_x_continuous(expand = c(0, 0),\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),\n                     limits = c(0, 20.0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) + # new\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#change-to-geom_density",
+    "href": "tidyverse_lecture_2.html#change-to-geom_density",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Change to geom_density()",
+    "text": "Change to geom_density()\n\npterosaur_data_classes %&gt;% \n  ggplot(aes(x = SKULL/10, fill = Size_class)) + \n  geom_density(colour = NA, alpha = 0.7) + # new\n  labs(x = \"Skull length (cm)\", y = \"No. individuals\", fill = \"Size class\") +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) +\n  scale_x_continuous(expand = c(0, 0),\n                     breaks = c(0, 4.0, 8.0, 12.0, 16.0, 20.0),\n                     limits = c(0, 20.0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#joyplots",
+    "href": "tidyverse_lecture_2.html#joyplots",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Joyplots",
+    "text": "Joyplots\n\n# use pivot_longer to get all traits into single column\n\npterosaur_data_classes %&gt;% \n  select(!c(single_wing_length)) %&gt;% \n  pivot_longer(cols = ORBIT:TIBIA, \n               names_to = \"Trait\",\n               values_to = \"Length\") %&gt;%\n  group_by(Trait) %&gt;% \n  mutate(Mean_value = mean(Length, na.rm = T)) %&gt;% \n  ungroup() %&gt;% \n  \n  # plot\n  ggplot(aes(x = Length, y = fct_reorder(Trait, Mean_value))) +\n  geom_density_ridges(alpha = 0.5, scale = 3, linewidth = 0,\n                      fill = \"#05595B\", color = NA) +\n  scale_x_continuous(limits = c(0, NA), expand = c(0, 0)) +\n  labs(y = \"Trait\", x = \"Length (mm)\") +\n  theme_minimal() +\n  theme(axis.text = element_text(size = 12),\n        axis.title = element_text(size = 13),\n        panel.grid.major.y = element_line(size = 0.5))"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#joyplots-output",
+    "href": "tidyverse_lecture_2.html#joyplots-output",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Joyplots",
+    "text": "Joyplots"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#the-scatterplot-geom_point",
+    "href": "tidyverse_lecture_2.html#the-scatterplot-geom_point",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "The scatterplot: geom_point()",
+    "text": "The scatterplot: geom_point()\n\npterosaur_data_classes %&gt;%\n  ggplot(aes(x = ORBIT, y = WING_PHALANX_1)) +\n  geom_point()"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#make-improvements",
+    "href": "tidyverse_lecture_2.html#make-improvements",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Make improvements",
+    "text": "Make improvements\n\npterosaur_data_classes %&gt;%\n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point() +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\") +\n  scale_fill_manual(values = c(met.brewer(\"Monet\")[2], met.brewer(\"Monet\")[8])) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#geom_point",
+    "href": "tidyverse_lecture_2.html#geom_point",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "geom_point()",
+    "text": "geom_point()\n\npterosaur_data_classes %&gt;% filter(Size_class != \"Unknown\") %&gt;% \n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point(aes(fill = Size_class), shape = 21, size = 5, alpha = 0.8, \n             colour = \"black\") +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\", \n       fill = \"Size class\") +\n  scale_fill_manual(values = c(met.brewer(\"Hiroshige\")[4], \n                               met.brewer(\"Hiroshige\")[6])) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#continuous-vs-discrete-colours",
+    "href": "tidyverse_lecture_2.html#continuous-vs-discrete-colours",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Continuous vs discrete colours",
+    "text": "Continuous vs discrete colours\n\npterosaur_data_classes %&gt;% filter(Size_class != \"Unknown\") %&gt;% \n  ggplot(aes(x = ORBIT/10, y = WING_PHALANX_1/10)) +\n  geom_point(aes(fill = ORBIT/10), shape = 21, size = 5, alpha = 0.9, \n             colour = \"black\") +\n  labs(x = \"Orbit length (cm)\", y = \"First wing phalanx\\nlength (cm)\", \n       fill = \"Orbit\\nlength\") +\n  scale_fill_gradientn(colors=met.brewer(\"Hiroshige\", direction = -1)) +\n  scale_x_continuous(expand = c(0, 0), limits = c(0, 5)) +\n  scale_y_continuous(expand = c(0, 0), limits = c(0, 22)) +\n  theme_classic() +\n  theme(panel.grid.major = element_line(),\n        text = element_text(size= 14))"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#general-tips",
+    "href": "tidyverse_lecture_2.html#general-tips",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "General tips",
+    "text": "General tips\n\nalpha: changes the transparency\nfill: colours the inside of elements\ncolour: colours the outlines of elements\n\nIf you want these to change with your data, place them inside aes()\nMany more plot styles can be found here"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#building-a-hypothesis",
+    "href": "tidyverse_lecture_2.html#building-a-hypothesis",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "Building a hypothesis",
+    "text": "Building a hypothesis\nWith all of the skills you now possess, outline your hypothesis for why there are discrete size classes in the Rhamphorhynchus dataset. Write the report up in quarto, making sure to use visual summaries of the data to support your hypothesis.\nMake sure to:\n\nTidy your code\nUse comments within code chunks\nWrite explanations outside of code chunks\nSee the _quarto.yml file\nQuarto html editing"
+  },
+  {
+    "objectID": "tidyverse_lecture_2.html#the-power-of-quarto",
+    "href": "tidyverse_lecture_2.html#the-power-of-quarto",
+    "title": "Workshop 2: An introduction to coding in R",
+    "section": "The power of Quarto",
+    "text": "The power of Quarto\nTom’s supplementary material"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#goals",
+    "href": "tidyverse_lecture_1_student.html#goals",
+    "title": "An introduction to coding in R",
+    "section": "Goals",
+    "text": "Goals\n\nSetup R to work as you intend\nCode in a reproducible, clear style\nGain a familiarity with key data wrangling functions\nBecome well versed in creating figures with ggplot\nCreate a document that should help you in the future"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#installation",
+    "href": "tidyverse_lecture_1_student.html#installation",
+    "title": "An introduction to coding in R",
+    "section": "Installation",
+    "text": "Installation\nWe will run R using quarto documents in R studio\nDownload the latest versions:\n\nR: https://cran.r-project.org/\nR studio: https://posit.co/downloads/\n\nQuarto: turns R into a text editor\n\nCode is written in specified code chunks\nNotes can be written outside code chunks without #\nYour code can be turned into an elegant report"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#setting-up",
+    "href": "tidyverse_lecture_1_student.html#setting-up",
+    "title": "An introduction to coding in R",
+    "section": "Setting up",
+    "text": "Setting up\nMake your interface look nice:\n\nTools &gt; global options\nLight or dark modes\nFira code: https://github.com/tonsky/FiraCode/wiki/RStudio-instructions"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#projects",
+    "href": "tidyverse_lecture_1_student.html#projects",
+    "title": "An introduction to coding in R",
+    "section": "Projects",
+    "text": "Projects\nFile &gt; New project\n\nExisting directory: places project in an existing folder\nNew directory: creates new folder\nVersion control: handy if you want to use github\n\nProjects are powerful:\n\nR knows where to look for files\nNo need to worry about setting working directories\nGreat for sharing"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#quarto",
+    "href": "tidyverse_lecture_1_student.html#quarto",
+    "title": "An introduction to coding in R",
+    "section": "Quarto",
+    "text": "Quarto\n\nOpen a quarto document in your new project\nFile &gt; New File &gt; Quarto document\nSave the document within the project directory (where you already are)\nSave the _quarto.yml provided in the email within this directory\nRender the document"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#packages",
+    "href": "tidyverse_lecture_1_student.html#packages",
+    "title": "An introduction to coding in R",
+    "section": "Packages",
+    "text": "Packages\nThe base version of R can be upgraded with packages\nWe shall use the tidyverse collection of packages.\n\n#install.packages(\"tidyverse\")\n#install.packages(\"pander\")\n#install.packages(\"patchwork\")\n#install.packages(\"MetBrewer\")\n\nlibrary(tidyverse) # for tidy coding\nlibrary(pander) # for nice tables\nlibrary(patchwork) # for aligning plots\nlibrary(MetBrewer) # for nice colours to use when making figures"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#the-tidyverse",
+    "href": "tidyverse_lecture_1_student.html#the-tidyverse",
+    "title": "An introduction to coding in R",
+    "section": "The tidyverse",
+    "text": "The tidyverse\n\n\n\n\n\nA collection of packages\nAll follow the same logic\nQuite different from base R\n“Supremely readable”"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#rhamphorhynchus-muensteri",
+    "href": "tidyverse_lecture_1_student.html#rhamphorhynchus-muensteri",
+    "title": "An introduction to coding in R",
+    "section": "Rhamphorhynchus muensteri",
+    "text": "Rhamphorhynchus muensteri\n\n\n\n\n\nA Bavarian pterosaur from the Jurassic\n140 different individuals have been found\nData from Habib and Hone 2024 PeerJ"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#the-dataset",
+    "href": "tidyverse_lecture_1_student.html#the-dataset",
+    "title": "An introduction to coding in R",
+    "section": "The dataset",
+    "text": "The dataset\n\n1pterosaur_data &lt;-\n2  read_delim(\"pterosaur_data.csv\", delim = \";\")\n\n3pterosaur_data\n\n\n1\n\nAssign a name to the dataset\n\n2\n\nLoad the csv file and specify the separator between columns\n\n3\n\nDisplay the dataset\n\n\n\n\n\n\n# A tibble: 138 × 15\n   Individual_ID ORBIT SKULL  NECK TRUNK_LENGTH  TAIL HUMERUS RADIUS\n           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;\n 1             1  11      40  21.5         47.5  106.    16.5   26.7\n 2             2  10      35  18           NA    112     15.3   26  \n 3             3  NA      NA  NA           36     85     NA     NA  \n 4             4  NA      36  NA           39    115     17     28  \n 5             5  NA      NA  15.5         36.5  100     14.6   23.8\n 6             6  12      35  23           40    110     NA     NA  \n 7             7  10      35  20           41    106     15.5   24  \n 8             8  NA      31  NA           NA     NA     14.5   24  \n 9             9  NA      NA  17           36     79     NA     NA  \n10            10  12.5    41  23           47    125     19     32  \n# ℹ 128 more rows\n# ℹ 7 more variables: METACARPAL_4 &lt;dbl&gt;, WING_PHALANX_1 &lt;dbl&gt;,\n#   WING_PHALANX_2 &lt;dbl&gt;, WING_PHALANX_3 &lt;dbl&gt;, WING_PHALANX_4 &lt;dbl&gt;,\n#   FEMUR &lt;dbl&gt;, TIBIA &lt;dbl&gt;"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#some-intriguing-patterns",
+    "href": "tidyverse_lecture_1_student.html#some-intriguing-patterns",
+    "title": "An introduction to coding in R",
+    "section": "Some intriguing patterns",
+    "text": "Some intriguing patterns"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#the-key-to-tidyverse-coding",
+    "href": "tidyverse_lecture_1_student.html#the-key-to-tidyverse-coding",
+    "title": "An introduction to coding in R",
+    "section": "The key to tidyverse coding: %>%",
+    "text": "The key to tidyverse coding: %&gt;%\nThis weird symbol is called a pipe\n\nYou should read this as then\ndo this, then do this…\nallows you to chain your code\n\n\n\npterosaur_data %&gt;% view()\n\nIn english this means: load the pterosaur data then view it in a new tab"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#the-holy-trinity",
+    "href": "tidyverse_lecture_1_student.html#the-holy-trinity",
+    "title": "An introduction to coding in R",
+    "section": "The holy trinity",
+    "text": "The holy trinity\n\nselect(): order, rename or drop columns\nfilter(): keep or remove specific rows\nmutate(): create new columns or edit existing ones\n\nIf you ever need help with a function, ? is your friend\n\n\n# An example of how to get some help\n?select"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#select",
+    "href": "tidyverse_lecture_1_student.html#select",
+    "title": "An introduction to coding in R",
+    "section": "select()",
+    "text": "select()\nRemoving columns you aren’t interested in:\n\npterosaur_data %&gt;% select(Individual_ID, TAIL)\n\n1pterosaur_data %&gt;% select(!c(Individual_ID, TAIL))\n\n2pterosaur_data %&gt;% select(contains(\"WING\"))\n\n3pterosaur_data %&gt;% select(1, 5)\n\n\n1\n\nthe ! reverses the statement\n\n2\n\ncontains chooses columns with names that contain a pattern\n\n3\n\nDangerous coding! Avoid.\n\n\n\n\n\nChanging column names:\n\npterosaur_data %&gt;% select(Specimen = Individual_ID)\n\n# if you want to keep all other columns\n\npterosaur_data %&gt;% select(Specimen = Individual_ID, everything())\n\n# a recommended alternative\n\npterosaur_data %&gt;% rename(Specimen = Individual_ID)"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#select-use-cases",
+    "href": "tidyverse_lecture_1_student.html#select-use-cases",
+    "title": "An introduction to coding in R",
+    "section": "select() use cases",
+    "text": "select() use cases\n\nCreate a new dataset that only contains the ID of the individual and wing measurements for phalanxs 2, 3 and 4.\n\n\n\n\n\nReturning to the original data, remove the measurements for wing phalanx 2 and 4\n\n\n\n\n\nWhy does this cause an error?\n\n\npterosaur_data %&gt;% select(contains(WING))"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#filter",
+    "href": "tidyverse_lecture_1_student.html#filter",
+    "title": "An introduction to coding in R",
+    "section": "filter()",
+    "text": "filter()\nChoosing rows of interest\n\nLarge_data &lt;- pterosaur_data %&gt;% filter(TAIL &gt; 200)\n\n1ten_cm_tails &lt;- pterosaur_data %&gt;% filter(TAIL == 100)\n\nlong_tails_and_small_heads &lt;- \n  pterosaur_data %&gt;% filter(TAIL &gt; 200 & SKULL &lt; 90)\n\nlong_tails_or_small_heads &lt;- \n2  pterosaur_data %&gt;% filter(TAIL &gt; 200 | SKULL &lt; 90)\n\n\n1\n\n== is needed to filter\n\n2\n\n| indicates or\n\n\n\n\n\nDealing with NA values\n\n# remove NAs in single column\npterosaur_data %&gt;% filter(!is.na(ORBIT))\n\n# remove all rows with NAs\npterosaur_data %&gt;% filter_at(vars(2:15), all_vars(!is.na(.)))"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#filter-use-cases",
+    "href": "tidyverse_lecture_1_student.html#filter-use-cases",
+    "title": "An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind pterosaurs that have longer necks than humerus’\n\n\n\n\n\nReturning to the original data, remove measurements with NA TRUNK_LENGTH values, for individuals with IDs greater than 50\n\n\n\n\n\nTrim the data to only include SKULL lengths between 60 and 90mm"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#filter-use-cases-1",
+    "href": "tidyverse_lecture_1_student.html#filter-use-cases-1",
+    "title": "An introduction to coding in R",
+    "section": "filter() use cases",
+    "text": "filter() use cases\n\nFind the individuals with the maximum and minimum tail lengths\n\n\n\n\n\nFind the individuals with tail lengths above the mean of the sampled population"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#mutate-modifying-existing-columns",
+    "href": "tidyverse_lecture_1_student.html#mutate-modifying-existing-columns",
+    "title": "An introduction to coding in R",
+    "section": "mutate(): modifying existing columns",
+    "text": "mutate(): modifying existing columns\nLet’s change the units of measurement to centimetres\n\npterosaur_data_cm &lt;- pterosaur_data %&gt;% mutate(ORBIT = ORBIT/10)\n\n\nThat only changed the values in one column - no matter, try this:\n\npterosaur_data_cm &lt;- \n  pterosaur_data %&gt;% \n1  mutate(across(ORBIT:TIBIA, ~ .x/10))\n\n\n1\n\nacross applies a function to all specified columns"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#mutate-creating-new-columns",
+    "href": "tidyverse_lecture_1_student.html#mutate-creating-new-columns",
+    "title": "An introduction to coding in R",
+    "section": "mutate(): creating new columns",
+    "text": "mutate(): creating new columns\nThe total length of a wing is roughly the sum of the lengths of the humerus, radius, fourth metacarpal and the four wing phalanxs. With mutate(), we can calculate this and add it to the dataset:\n\n\npterosaur_data &lt;-\n  pterosaur_data %&gt;% \n  mutate(single_wing_length = \n           HUMERUS + RADIUS + METACARPAL_4 + WING_PHALANX_1 + \n           WING_PHALANX_2 + WING_PHALANX_3 + WING_PHALANX_4) %&gt;% \n  select(Individual_ID, single_wing_length, everything())"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#conditional-mutation",
+    "href": "tidyverse_lecture_1_student.html#conditional-mutation",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\nCan we place individuals into phenotypic classes?"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#conditional-mutation-1",
+    "href": "tidyverse_lecture_1_student.html#conditional-mutation-1",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\n\npterosaur_data_age_structured &lt;-\n  pterosaur_data %&gt;% \n  mutate(Phenotypic_class = case_when(\n1    single_wing_length &lt; 300 ~ \"Small\",\n2    single_wing_length &gt;= 300 ~ \"Large\",\n3    .default = \"Unknown\"))\n\npterosaur_data_age_structured %&gt;% \n  select(Individual_ID, Phenotypic_class, single_wing_length)\n\n\n1\n\nFor this subset of cases…\n\n2\n\nFor a second subset of cases…\n\n3\n\nFor all remaining cases…\n\n\n\n\n\n\n# A tibble: 138 × 3\n   Individual_ID Phenotypic_class single_wing_length\n           &lt;dbl&gt; &lt;chr&gt;                         &lt;dbl&gt;\n 1             1 Small                          183.\n 2             2 Small                          174.\n 3             3 Unknown                         NA \n 4             4 Small                          189.\n 5             5 Small                          166.\n 6             6 Unknown                         NA \n 7             7 Small                          164.\n 8             8 Unknown                         NA \n 9             9 Unknown                         NA \n10            10 Small                          221 \n# ℹ 128 more rows"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#conditional-mutation-2",
+    "href": "tidyverse_lecture_1_student.html#conditional-mutation-2",
+    "title": "An introduction to coding in R",
+    "section": "Conditional mutation",
+    "text": "Conditional mutation\nIt’s also possible to mutate a single row\n\npterosaur_data %&gt;% \n  mutate(Sex = case_when(Individual_ID == 1 ~ \"Special\",\n                         .default = \"Ordinary\"))"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#build-your-phenotypic-classes",
+    "href": "tidyverse_lecture_1_student.html#build-your-phenotypic-classes",
+    "title": "An introduction to coding in R",
+    "section": "Build your phenotypic classes",
+    "text": "Build your phenotypic classes\n\nNot every individual has a recorded wing length.\nBut there are other morphological traits in the dataset\nCreate a classification criteria and implement it"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#phenotypic-classes",
+    "href": "tidyverse_lecture_1_student.html#phenotypic-classes",
+    "title": "An introduction to coding in R",
+    "section": "Phenotypic classes",
+    "text": "Phenotypic classes"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#bonus-content-summarise",
+    "href": "tidyverse_lecture_1_student.html#bonus-content-summarise",
+    "title": "An introduction to coding in R",
+    "section": "Bonus content: summarise()",
+    "text": "Bonus content: summarise()\n\nThe logic of mutate() can be extended to summarise() row values\nRows can be grouped to summarise conditionally using the group_by function\n\n\n\npterosaur_data_age_structured %&gt;% \n  group_by(Phenotypic_class) %&gt;% \n1  summarise(\"Wing length\" = mean(single_wing_length, na.rm = T))\n\n\n1\n\nmean() has a built-in way to deal with NA values\n\n\n\n\n\n\n# A tibble: 3 × 2\n  Phenotypic_class `Wing length`\n  &lt;chr&gt;                    &lt;dbl&gt;\n1 Large                     490.\n2 Small                     197.\n3 Unknown                   NaN"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#your-task",
+    "href": "tidyverse_lecture_1_student.html#your-task",
+    "title": "An introduction to coding in R",
+    "section": "Your task",
+    "text": "Your task\n\nSplit pterosaurs into phenotypic classes and remove those you can’t categorise\nTrim the dataframe to only include class, skull, length, wing length and tail length\nSummarise the data to show the mean for morphological traits, for each class\nConvert to cm and round to zero decimal places\n\nFocus on writing clear code, with comments (using the #) accompanying each important step.\nHint: the round() function can be used inside mutate()"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#table-making",
+    "href": "tidyverse_lecture_1_student.html#table-making",
+    "title": "An introduction to coding in R",
+    "section": "Table making",
+    "text": "Table making\nOnce complete, pass your polished dataframe to this function with the %&gt;% to make a neat table\n\n# your dataframe goes here %&gt;% \n1 pander(split.cell = 20, split.table = Inf)\n\n\n1\n\nSee ?pander"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#expanding-our-vocabulary",
+    "href": "tidyverse_lecture_1_student.html#expanding-our-vocabulary",
+    "title": "An introduction to coding in R",
+    "section": "Expanding our vocabulary",
+    "text": "Expanding our vocabulary\n\ndistinct()\nslice()\nn()\nbind_rows()"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#joins",
+    "href": "tidyverse_lecture_1_student.html#joins",
+    "title": "An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\nWhat if we have two separate dataframes that we want to merge?\n\nfive_random_pterosaurs &lt;- pterosaur_data %&gt;% \n  filter_at(vars(2:15), all_vars(!is.na(.)))  %&gt;% \n  slice_sample(n = 8)\n\neye_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, ORBIT) %&gt;% \n  arrange(Individual_ID)\n\ntail_stats &lt;- \n  five_random_pterosaurs %&gt;%\n  slice_sample(n = 5) %&gt;% \n  select(Individual_ID, TAIL) %&gt;% \n  arrange(Individual_ID)"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#joins-1",
+    "href": "tidyverse_lecture_1_student.html#joins-1",
+    "title": "An introduction to coding in R",
+    "section": "Joins",
+    "text": "Joins\n\n\n\neye_stats\n\n# A tibble: 5 × 2\n  Individual_ID ORBIT\n          &lt;dbl&gt; &lt;dbl&gt;\n1             7  10  \n2            10  12.5\n3            26  15  \n4            29  13  \n5            54  20  \n\n\n\n\ntail_stats\n\n# A tibble: 5 × 2\n  Individual_ID  TAIL\n          &lt;dbl&gt; &lt;dbl&gt;\n1             7   106\n2            10   125\n3            26   163\n4            29   148\n5            43   320\n\n\n\nFor joins to work, there needs to be some common element that links the two dataframes"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#left_join",
+    "href": "tidyverse_lecture_1_student.html#left_join",
+    "title": "An introduction to coding in R",
+    "section": "left_join()",
+    "text": "left_join()\n\nAdd columns from dataframe y to dataframe x\nThe comment element is the Individual_ID\nKeep all observations in x\n\n\n\n\neye_stats %&gt;% \n  left_join(tail_stats)\n\n# A tibble: 5 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             7  10     106\n2            10  12.5   125\n3            26  15     163\n4            29  13     148\n5            54  20      NA\n\n\n\n\ntail_stats %&gt;% \n  left_join(eye_stats)\n\n# A tibble: 5 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             7   106  10  \n2            10   125  12.5\n3            26   163  15  \n4            29   148  13  \n5            43   320  NA"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#inner_join",
+    "href": "tidyverse_lecture_1_student.html#inner_join",
+    "title": "An introduction to coding in R",
+    "section": "inner_join()",
+    "text": "inner_join()\n\nOnly keep rows in x that have a matching common element in y\n\n\n\n\neye_stats %&gt;% \n  inner_join(tail_stats)\n\n# A tibble: 4 × 3\n  Individual_ID ORBIT  TAIL\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             7  10     106\n2            10  12.5   125\n3            26  15     163\n4            29  13     148\n\n\n\n\ntail_stats %&gt;% \n  inner_join(eye_stats)\n\n# A tibble: 4 × 3\n  Individual_ID  TAIL ORBIT\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1             7   106  10  \n2            10   125  12.5\n3            26   163  15  \n4            29   148  13"
+  },
+  {
+    "objectID": "tidyverse_lecture_1_student.html#build-a-quarto-report",
+    "href": "tidyverse_lecture_1_student.html#build-a-quarto-report",
+    "title": "An introduction to coding in R",
+    "section": "Build a quarto report",
+    "text": "Build a quarto report\n\nUse quarto to publish a report, documenting your code\nUse this time to tidy your code\nUse comments within code chunks\nWrite explanations outside of code chunks\nSee the _quarto.yml file"
+  }
+]

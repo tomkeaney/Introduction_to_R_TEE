@@ -1,0 +1,692 @@
+---
+title: "Workshop 1: An introduction to coding in R"
+author: "Tom Keaney"
+format:
+  revealjs: 
+    theme: default
+    embed-resources: true # output doc contains all info needed to display html
+    code-annotations: hover
+    code-copy: false
+
+---
+
+## Goals
+
+- Setup R to work as you intend
+- Code in a reproducible, clear style
+- Gain a familiarity with key data wrangling functions
+- Become well versed in creating figures with ggplot
+- Create a document that should help you in the future
+
+## Installation
+
+We will run R using quarto documents in R studio
+
+Download the latest versions:
+
+-   R: <https://cran.r-project.org/>
+-   R studio: <https://posit.co/downloads/>
+
+**Quarto**: turns R into a text editor
+
+-   Code is written in specified code chunks
+-   Notes can be written outside code chunks without `#`
+-   Your code can be turned into an elegant report
+
+## Setting up
+
+Make your interface look nice:
+
+- Tools > global options
+- Light or dark modes
+- `Fira code`: <https://github.com/tonsky/FiraCode/wiki/RStudio-instructions>
+
+---
+
+![](images/Layout_example.png)
+---
+
+![](images/Inline_code_off.png)
+
+## Projects
+
+File > New project
+
+- Existing directory: places project in an existing folder
+- New directory: creates new folder
+- Version control: handy if you want to use github
+
+Projects are powerful:
+
+- R knows where to look for files
+- No need to worry about setting working directories
+- Great for sharing 
+
+## Quarto
+
+- Open a quarto document in your new project 
+
+- File > New File > Quarto document 
+
+- Save the document within the project directory (where you already are)
+
+- Save the `_quarto.yml` provided in the email within this directory
+
+- Render the document 
+
+## Packages
+
+The base version of R can be upgraded with `packages`
+
+We shall use the `tidyverse` collection of packages.
+
+```{r, echo=TRUE}
+#install.packages("tidyverse")
+#install.packages("pander")
+#install.packages("patchwork")
+#install.packages("MetBrewer")
+
+library(tidyverse) # for tidy coding
+library(pander) # for nice tables
+library(patchwork) # for aligning plots
+library(MetBrewer) # for nice colours to use when making figures
+```
+
+## The tidyverse
+:::: {.columns}
+
+::: {.column width="50%"}
+![](images/tidyverse_hex.png){height="500"}
+:::
+
+::: {.column width="50%"}
+- A collection of packages 
+
+- All follow the same logic
+
+- Quite different from base R
+
+- "Supremely readable"
+:::
+
+::::
+## _Rhamphorhynchus muensteri_
+
+:::: {.columns}
+
+::: {.column width="40%"}
+![](images/Pterosaur.jpg){height="500"}
+:::
+
+::: {.column width="60%"}
+- A Bavarian pterosaur from the Jurassic
+
+- 140 different individuals have been found
+
+- Data from [Habib and Hone 2024 _PeerJ_](https://peerj.com/articles/17524/)
+:::
+
+::::
+
+## The dataset 
+
+```{r, echo=TRUE}
+#| output-location: fragment
+
+pterosaur_data <- #<1>
+  read_delim("pterosaur_data.csv", delim = ";") #<2>
+
+pterosaur_data #<3>
+
+```
+
+1. Assign a name to the dataset
+2. Load the csv file and specify the separator between columns
+3. Display the dataset
+
+## Rhamphorhynchus
+
+![](images/pterosaur_skeleton.png)
+
+## Some intriguing patterns
+
+```{r}
+
+p1 <-
+  pterosaur_data %>% 
+  ggplot(aes(x = SKULL)) +
+  geom_density(fill = "#2d2926", colour = "white") +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 220)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(y = "Density",
+       x = "Skull length (mm)") +
+  theme_classic() +
+  theme(text = element_text(size = 14))
+
+p2 <-
+  pterosaur_data %>% 
+  ggplot(aes(x = HUMERUS + RADIUS + METACARPAL_4 + 
+               WING_PHALANX_1 + WING_PHALANX_2 + 
+               WING_PHALANX_3 + WING_PHALANX_4)) +
+  geom_density(fill = "#2d2926", colour = "white") +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 810)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(y = "Density",
+       x = "Wing length (mm)") +
+  theme_classic() +
+  theme(text = element_text(size = 14))
+
+p3 <- 
+  pterosaur_data %>% 
+  ggplot(aes(x = FEMUR + TIBIA)) +
+  geom_density(fill = "#2d2926", colour = "white") +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 170)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(y = "Density",
+       x = "Leg length (mm)") +
+  theme_classic() +
+  theme(text = element_text(size = 14))
+
+p4 <-
+  pterosaur_data %>% 
+  ggplot(aes(x = TAIL)) +
+  geom_density(fill = "#2d2926", colour = "white") +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 470)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(y = "Density",
+       x = "Tail length (mm)") +
+  theme_classic() +
+  theme(text = element_text(size = 14))
+
+(p1 + p2) / (p3 + p4)
+```
+
+
+## The key to tidyverse coding: `%>%`
+
+This weird symbol is called a pipe
+
+- You should read this as `then`
+
+- do this, `then` do this...
+
+- allows you to chain your code
+
+::: {.fragment}
+```{r}
+#| echo: TRUE
+#| eval: FALSE
+
+pterosaur_data %>% view()
+```
+
+In english this means: load the pterosaur data `then` view it in a new tab 
+
+:::
+
+## The holy trinity 
+
+- `select()`: order, rename or drop **columns**
+
+- `filter()`: keep or remove specific **rows**
+
+- `mutate()`: create new columns or edit existing ones
+
+
+If you ever need help with a function, `?` is your friend
+
+::: {.fragment}
+```{r}
+#| echo: TRUE
+#| eval: FALSE
+
+# An example of how to get some help
+?select
+```
+
+:::
+
+## select()
+
+Removing columns you aren't interested in:
+
+```{r}
+#| echo: TRUE
+#| eval: FALSE
+#| code-line-numbers: "1|3|5|7"
+
+pterosaur_data %>% select(Individual_ID, TAIL)
+
+pterosaur_data %>% select(!c(Individual_ID, TAIL)) #<1>
+
+pterosaur_data %>% select(contains("WING")) #<2>
+
+pterosaur_data %>% select(1, 5) #<3>
+  
+```
+1. the `!` reverses the statement
+2. `contains` chooses columns with names that contain a pattern
+3. Dangerous coding! Avoid.
+
+::: {.fragment}
+
+Changing column names:
+
+```{r}
+#| echo: TRUE
+#| eval: FALSE
+#| code-line-numbers: "1|5|9"
+pterosaur_data %>% select(Specimen = Individual_ID)
+
+# if you want to keep all other columns
+
+pterosaur_data %>% select(Specimen = Individual_ID, everything())
+
+# a recommended alternative
+
+pterosaur_data %>% rename(Specimen = Individual_ID)
+```
+
+:::
+
+## select() use cases
+
+1. Create a new dataset that only contains the ID of the individual and wing measurements for phalanxs 2, 3 and 4.
+
+::: {.fragment}
+```{r, echo=TRUE, eval=FALSE}
+
+pterosaur_subset <-
+  pterosaur_data %>% 
+  select(Individual_ID, num_range("WING_PHALANX_", 2:4)) 
+
+```
+:::
+
+2. Returning to the original data, remove the measurements for wing phalanx 2 and 4
+
+::: {.fragment}
+```{r, echo=TRUE, eval=FALSE}
+
+pterosaur_subset_2 <-
+  pterosaur_data %>% 
+  select(!c(WING_PHALANX_2, WING_PHALANX_4)) 
+
+```
+:::
+
+3. Why does this cause an error?
+
+```{r, echo=TRUE, eval=FALSE}
+pterosaur_data %>% select(contains(WING))
+```
+
+## filter()
+
+Choosing rows of interest
+
+```{r}
+#| echo: TRUE
+#| eval: FALSE
+#| code-line-numbers: "1|3|5,6|8,9"
+
+Large_data <- pterosaur_data %>% filter(TAIL > 200)
+
+ten_cm_tails <- pterosaur_data %>% filter(TAIL == 100) #<1>
+
+long_tails_and_small_heads <- 
+  pterosaur_data %>% filter(TAIL > 200 & SKULL < 90)
+
+long_tails_or_small_heads <- 
+  pterosaur_data %>% filter(TAIL > 200 | SKULL < 90) #<2>
+  
+```
+1. == is needed to filter
+2. `|` indicates _or_
+
+::: {.fragment}
+
+Dealing with `NA` values
+
+```{r}
+#| echo: TRUE
+#| eval: FALSE
+#| code-line-numbers: "2|5"
+
+# remove NAs in single column
+pterosaur_data %>% filter(!is.na(ORBIT))
+
+# remove all rows with NAs
+pterosaur_data %>% filter_at(vars(2:15), all_vars(!is.na(.))) 
+```
+
+:::
+
+## filter() use cases
+
+1. Find pterosaurs that have longer necks than humerus'
+
+::: {.fragment}
+```{r, echo=TRUE, eval=FALSE}
+
+necks_longer_than_forearms <- pterosaur_data %>% filter(NECK > HUMERUS) 
+
+```
+:::
+
+2. Returning to the original data, remove measurements with NA `TRUNK_LENGTH` values, for individuals with IDs greater than 50
+
+::: {.fragment}
+```{r, echo=TRUE, eval=FALSE}
+
+pterosaur_data %>% 
+  filter(!is.na(TRUNK_LENGTH) & Individual_ID > 50) 
+
+```
+:::
+
+3. Trim the data to only include SKULL lengths between 60 and 90mm
+
+::: {.fragment}
+```{r, echo=TRUE, eval=FALSE}
+medium_skulls <- pterosaur_data %>% filter(SKULL <= 90 & SKULL >= 60)
+```
+:::
+
+## filter() use cases
+
+1. Find the individuals with the maximum and minimum tail lengths
+
+::: {.fragment}
+```{r, echo=TRUE, eval=FALSE}
+
+pterosaur_data %>%
+  filter(!is.na(TAIL)) %>% 
+  filter(TAIL == max(TAIL) |
+           TAIL == min(TAIL)) 
+
+```
+:::
+
+2. Find the individuals with tail lengths above the mean of the sampled population
+
+::: {.fragment}
+```{r, echo=TRUE, eval=FALSE}
+
+pterosaur_data %>% 
+  filter(!is.na(TAIL)) %>% 
+  filter(TAIL > mean(TAIL)) 
+
+```
+:::
+
+## mutate(): modifying existing columns
+
+Let's change the units of measurement to centimetres
+
+```{r, echo=TRUE, eval=FALSE}
+pterosaur_data_cm <- pterosaur_data %>% mutate(ORBIT = ORBIT/10)
+```
+
+::: {.fragment}
+
+Now add 10cm to each orbit measurement (but don't save this!)
+
+```{r, echo=TRUE, eval=FALSE}
+pterosaur_data %>% mutate(ORBIT = ORBIT + 10)
+```
+
+:::
+
+## mutate(): creating new columns
+
+The total length of a wing is roughly the sum of the lengths of the humerus, radius, fourth metacarpal and the four wing phalanxs. With `mutate()`, we can calculate this and add it to the dataset:
+
+::: {.fragment}
+```{r, echo=TRUE}
+pterosaur_data <-
+  pterosaur_data %>% 
+  mutate(single_wing_length = 
+           HUMERUS + RADIUS + METACARPAL_4 + WING_PHALANX_1 + 
+           WING_PHALANX_2 + WING_PHALANX_3 + WING_PHALANX_4) %>% 
+  select(Individual_ID, single_wing_length, everything())
+
+```
+:::
+
+## Conditional mutation
+
+```{r}
+(p1 + p2) / (p3 + p4)
+```
+
+Can we place individuals into phenotypic classes?
+
+## Conditional mutation
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| code-line-numbers: "3|4|5|6"
+pterosaur_data_age_structured <-
+  pterosaur_data %>% 
+  mutate(Phenotypic_class = case_when(
+    single_wing_length < 300 ~ "Small", #<1>
+    single_wing_length >= 300 ~ "Large", #<2>
+    .default = "Unknown")) #<3>
+
+pterosaur_data_age_structured %>% 
+  select(Individual_ID, Phenotypic_class, single_wing_length)
+```
+1. For this subset of cases...
+2. For a second subset of cases...
+3. For all remaining cases...
+
+## Conditional mutation
+
+It's also possible to mutate a single row
+
+```{r, echo=TRUE, eval=FALSE}
+
+pterosaur_data %>% 
+  mutate(Sex = case_when(Individual_ID == 1 ~ "Special",
+                         .default = "Ordinary"))
+
+```
+
+## Build your phenotypic classes
+
+- Not every individual has a recorded wing length. 
+
+- But there are other morphological traits in the dataset
+
+- Create a classification criteria and implement it
+
+```{r}
+(p1 + p2) / (p3 + p4)
+```
+
+## Phenotypic classes
+
+```{r, echo=TRUE}
+pterosaur_data_age_structured <-
+  pterosaur_data %>% 
+  mutate(Phenotypic_class = case_when(single_wing_length < 300 ~ "Small", 
+                               single_wing_length >= 300 ~ "Large", 
+                               WING_PHALANX_1 < 80 ~ "Small",
+                               WING_PHALANX_1 >= 80 ~ "Large",
+                               FEMUR < 20 ~ "Small",
+                               FEMUR >= 20 ~ "Large",
+                               TAIL < 150 ~ "Small",
+                               TAIL >= 200 ~ "Large",
+                               SKULL < 80 ~ "Small",
+                               SKULL >= 100 ~ "Large",
+                               HUMERUS < 25 ~ "Small",
+                               HUMERUS >= 30 ~ "Large",
+                               SKULL < 90 ~ "Small",
+                               SKULL >= 90 ~ "Large",
+                               .default = "Unknown")) %>% 
+  select(Individual_ID, Phenotypic_class, everything())
+```
+
+## Bonus content: summarise()
+
+- The logic of `mutate()` can be extended to `summarise()` row values
+- Rows can be grouped to summarise conditionally using the `group_by` function 
+
+::: {.fragment}
+
+```{r, echo=TRUE}
+#| output-location: fragment
+#| code-line-numbers: "2|3"
+pterosaur_data_age_structured %>% 
+  group_by(Phenotypic_class) %>% 
+  summarise("Wing length" = mean(single_wing_length, na.rm = T)) #<1>
+```
+1. `mean()` has a built-in way to deal with NA values
+:::
+
+## Your task
+
+1. Split pterosaurs into phenotypic classes and remove those you can't categorise 
+2. Trim the dataframe to only include class, skull, length, wing length and tail length
+3. Summarise the data to show the mean for morphological traits, for each class
+4. Convert to cm and round to zero decimal places 
+
+Focus on writing clear code, with comments (using the `#`) accompanying each important step.
+
+`Hint`: the `round()` function can be used inside `mutate()`
+
+## Table making
+
+Once complete, pass your polished dataframe to this function with the `%>%` to make a neat table
+
+```{r, echo=TRUE, eval=FALSE}
+# your dataframe goes here %>% 
+ pander(split.cell = 20, split.table = Inf) #<1>
+```
+1. See `?pander`
+
+## Expanding our vocabulary
+
+- `distinct()`
+
+- `slice()`
+
+- `n()`
+
+- `bind_rows()`
+
+## Joins
+
+What if we have two separate dataframes that we want to merge?
+
+```{r}
+#| echo: TRUE
+five_random_pterosaurs <- pterosaur_data %>% 
+  filter_at(vars(2:15), all_vars(!is.na(.)))  %>% 
+  slice_sample(n = 8)
+
+eye_stats <- 
+  five_random_pterosaurs %>%
+  slice_sample(n = 5) %>% 
+  select(Individual_ID, ORBIT) %>% 
+  arrange(Individual_ID)
+
+tail_stats <- 
+  five_random_pterosaurs %>%
+  slice_sample(n = 5) %>% 
+  select(Individual_ID, TAIL) %>% 
+  arrange(Individual_ID)
+```
+
+## Joins
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r, echo=TRUE}
+eye_stats
+```
+:::
+
+::: {.column width="50%"}
+
+```{r, echo=TRUE}
+tail_stats
+```
+
+:::
+
+::::
+
+For joins to work, there needs to be some common element that links the two dataframes
+
+## left_join()
+
+- Add columns from dataframe `y` to dataframe `x`
+- The comment element is the `Individual_ID`
+- Keep all observations in `x`
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: TRUE
+eye_stats %>% 
+  left_join(tail_stats)
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: TRUE
+tail_stats %>% 
+  left_join(eye_stats)
+```
+
+:::
+
+::::
+
+## inner_join()
+
+- Only keep rows in `x` that have a matching common element in `y`
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: TRUE
+eye_stats %>% 
+  inner_join(tail_stats)
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: TRUE
+tail_stats %>% 
+  inner_join(eye_stats)
+```
+
+:::
+
+::::
+
+## Build a quarto report
+
+- Use `quarto` to publish a report, documenting your code
+
+- Use this time to tidy your code
+
+- Use comments within code chunks
+
+- Write explanations outside of code chunks
+
+- See the `_quarto.yml` file
+
